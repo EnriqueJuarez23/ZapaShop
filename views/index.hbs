@@ -3,88 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZapaShop | Tu Estilo, Tu Paso</title>
+    <title>ZapaShop - Encuentra tu Estilo Perfecto</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="/styles.css">
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans">
+<body class="bg-gray-50 font-sans">
 
-    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <div class="bg-blue-600 p-2 rounded-xl">
-                    <i data-lucide="zap" class="text-white w-6 h-6"></i>
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="/" class="flex items-center gap-2">
+                    <div class="bg-blue-600 p-2 rounded-lg">
+                        <i data-lucide="shopping-bag" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <span class="text-2xl font-black text-gray-900 tracking-tight">ZapaShop</span>
+                </a>
+
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="/" class="text-blue-600 font-bold">Inicio</a>
+                    <a href="#catalogo" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">Catálogo</a>
+                    <a href="#nosotros" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">Nosotros</a>
+                    <a href="/carrito" class="relative text-gray-600 hover:text-blue-600">
+                        <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 rounded-full">0</span>
+                    </a>
+                </nav>
+
+                <div class="flex items-center gap-3">
+                    <a href="/perfil" class="text-gray-600 hover:text-blue-600 font-medium text-sm hidden sm:block">Iniciar Sesión</a>
+                    <a href="/perfil" class="bg-blue-600 text-white px-5 py-2.5 rounded-full font-bold text-sm hover:bg-blue-700 transition-all shadow-md shadow-blue-100">
+                        Registrarse
+                    </a>
+                    <a href="/admin" class="p-2 text-gray-400 hover:text-red-500 transition-colors" title="Admin">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    </a>
                 </div>
-                <span class="text-2xl font-black tracking-tighter">ZAPASHOP</span>
             </div>
-
-            <div class="flex items-center gap-6">
-                <a href="/perfil" class="flex items-center gap-2 font-bold text-slate-600 hover:text-blue-600 transition-colors">
-                    <i data-lucide="user" class="w-5 h-5"></i>
-                    <span id="navUsuario">Mi Cuenta</span>
-                </a>
-                <a href="/carrito" class="relative bg-slate-900 text-white p-3 rounded-full hover:scale-110 transition-transform shadow-lg">
-                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
-                    <span id="cartCount" class="absolute -top-1 -right-1 bg-blue-500 text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">0</span>
-                </a>
-            </div>
-        </div>
-    </nav>
-
-    <header class="max-w-7xl mx-auto px-6 pt-10 pb-16">
-        <div class="bg-slate-900 rounded-[3rem] p-12 overflow-hidden relative min-h-[400px] flex items-center">
-            <div class="relative z-10 max-w-xl">
-                <span class="text-blue-400 font-bold tracking-widest uppercase text-sm">Nueva Colección 2026</span>
-                <h1 class="text-6xl font-black text-white leading-tight mt-4 mb-6">Camina con el futuro en tus pies.</h1>
-                <p class="text-slate-400 text-lg mb-8">Descubre la tecnología y el diseño que están revolucionando el mundo del calzado deportivo.</p>
-                <button class="bg-white text-slate-900 px-8 py-4 rounded-2xl font-black hover:bg-blue-400 hover:text-white transition-all shadow-xl uppercase tracking-wider">
-                    Explorar ahora
-                </button>
-            </div>
-            <div class="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-blue-600/20 to-transparent"></div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-6 pb-24">
-        <div class="flex justify-between items-end mb-10">
-            <div>
-                <h2 class="text-3xl font-black">Catálogo de Estrenos</h2>
-                <p class="text-slate-500 mt-2">Seleccionados especialmente para ti.</p>
+    <section class="relative bg-gray-900 text-white overflow-hidden">
+        <div class="absolute inset-0 opacity-40">
+            <img src="https://images.unsplash.com/photo-1556906781-9a412961c28c?w=1600" alt="Fondo" class="w-full h-full object-cover">
+        </div>
+        <div class="relative max-w-7xl mx-auto px-4 py-24 sm:py-32 text-center">
+            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">CAMINA CON <br><span class="text-blue-500">ESTILO Y PODER</span></h1>
+            <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-10">
+                Descubre la colección más exclusiva de sneakers y botas. Diseñados para quienes no temen destacar en cada paso.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#catalogo" class="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition-all">Ver Catálogo</a>
+                <a href="#nosotros" class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition-all">Saber más</a>
             </div>
-            <div class="flex gap-2">
-                <button class="p-3 border rounded-xl hover:bg-white transition-colors"><i data-lucide="sliders-horizontal"></i></button>
+        </div>
+    </section>
+
+    <section id="nosotros" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <span class="text-blue-600 font-bold uppercase tracking-widest text-sm">Nuestra Historia</span>
+                    <h2 class="text-4xl font-black text-gray-900 mt-4 mb-6">Pasión por el calzado desde 2024</h2>
+                    <p class="text-gray-600 leading-relaxed mb-6">
+                        En ZapaShop, no solo vendemos zapatos; entregamos confianza. Nacimos con la idea de que el calzado es la pieza fundamental de cualquier outfit y debe representar tu personalidad.
+                    </p>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="flex flex-col gap-2">
+                            <i data-lucide="truck" class="text-blue-600 w-8 h-8"></i>
+                            <h4 class="font-bold">Envíos Rápidos</h4>
+                            <p class="text-sm text-gray-500">Llegamos a todo el país en menos de 48 horas.</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <i data-lucide="award" class="text-blue-600 w-8 h-8"></i>
+                            <h4 class="font-bold">Originalidad</h4>
+                            <p class="text-sm text-gray-500">Productos 100% auténticos con garantía.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=800" alt="Zapato de diseño" class="rounded-3xl shadow-2xl">
+                    <div class="absolute -bottom-6 -left-6 bg-blue-600 text-white p-8 rounded-2xl hidden lg:block">
+                        <p class="text-4xl font-black">+500</p>
+                        <p class="text-sm opacity-80">Modelos disponibles</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="catalogo" class="max-w-7xl mx-auto py-20 px-4">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+            <div>
+                <h2 class="text-4xl font-black text-gray-900">Nuestro Catálogo</h2>
+                <p class="text-gray-500 mt-2">Explora las últimas tendencias del mercado.</p>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-4">
+                <div class="relative">
+                    <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar zapatos..." class="pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none w-full sm:w-64 transition-all">
+                </div>
+                <select id="categoryFilter" class="px-4 py-3 border border-gray-200 rounded-xl bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                    <option value="Todos">Todas las categorías</option>
+                    <option value="Sneakers">Sneakers</option>
+                    <option value="Botas">Botas</option>
+                    <option value="Deportivos">Deportivos</option>
+                </select>
             </div>
         </div>
 
-        <div id="contenedorZapatos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="animate-pulse flex flex-col gap-4">
-                <div class="bg-slate-200 h-80 rounded-3xl"></div>
-                <div class="bg-slate-200 h-6 w-3/4 rounded-md"></div>
-                <div class="bg-slate-200 h-6 w-1/4 rounded-md"></div>
+        <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             </div>
-            </div>
-    </main>
+    </section>
 
-    <footer class="bg-white border-t border-slate-100 py-12">
-        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
-            <p class="text-slate-400 text-sm">© 2026 ZapaShop by Enrique. Todos los derechos reservados.</p>
-            
-            <a href="/admin" class="text-slate-300 hover:text-slate-900 transition-colors">
-                <i data-lucide="shield-check" class="w-5 h-5"></i>
-            </a>
+    <footer class="bg-gray-900 text-white pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-gray-800 pb-12 mb-8">
+            <div>
+                <div class="flex items-center gap-2 mb-6">
+                    <i data-lucide="shopping-bag" class="w-6 h-6 text-blue-500"></i>
+                    <span class="text-2xl font-bold tracking-tight">ZapaShop</span>
+                </div>
+                <p class="text-gray-400 leading-relaxed">
+                    La mejor experiencia en compra de calzado online. Calidad, estilo y rapidez en un solo lugar.
+                </p>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-6">Enlaces Rápidos</h4>
+                <ul class="space-y-4 text-gray-400">
+                    <li><a href="/" class="hover:text-blue-500 transition-colors">Inicio</a></li>
+                    <li><a href="/catalogo" class="hover:text-blue-500 transition-colors">Catálogo</a></li>
+                    <li><a href="/carrito" class="hover:text-blue-500 transition-colors">Carrito</a></li>
+                    <li><a href="/admin" class="hover:text-blue-500 transition-colors">Administración</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-6">Suscríbete</h4>
+                <p class="text-sm text-gray-400 mb-4">Recibe ofertas exclusivas y nuevos lanzamientos.</p>
+                <div class="flex gap-2">
+                    <input type="email" placeholder="tu@email.com" class="bg-gray-800 border-none rounded-lg px-4 py-2 w-full outline-none focus:ring-1 focus:ring-blue-500">
+                    <button class="bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">Ok</button>
+                </div>
+            </div>
+        </div>
+        <div class="text-center text-gray-500 text-sm">
+            © 2026 ZapaShop. Hecho por Universitarios del Tecnologico de Iztapalapa.
         </div>
     </footer>
 
     <script src="/app.js"></script>
-    <script>
-        // Inicializar iconos de Lucide
-        lucide.createIcons();
-
-        // Pequeña lógica para mostrar el nombre si hay sesión
-        const user = localStorage.getItem('usuario_logueado');
-        if(user) {
-            document.getElementById('navUsuario').innerText = `Hola, ${user}`;
-        }
-    </script>
+    <script>lucide.createIcons();</script>
 </body>
 </html>
