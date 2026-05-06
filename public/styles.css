@@ -1,0 +1,16 @@
+/* Configuración para que el desplazamiento en la página sea suave */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Puedes agregar aquí tus propias reglas CSS si en el futuro quieres 
+   cambiar colores o tamaños sin usar Tailwind */
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Animación sutil para que el modal aparezca de forma agradable */
+#loginModal {
+    transition: opacity 0.3s ease-in-out;
+}
