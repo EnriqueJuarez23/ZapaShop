@@ -38,7 +38,15 @@ export class AppController {
   @Render('catalogo')
   getCatalogo() { return {}; }
 
+
+@Get('admin')
+@Render('admin')
+getAdmin() {
+  return {};
+}
+
   @Get('carrito') @Render('carrito') getCarrito() { return {}; }
   @Get('admin') @Render('admin') getAdmin() { return {}; }
   @Get('perfil') @Render('perfil') getPerfil() { return {}; }
+
 }

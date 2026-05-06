@@ -2,80 +2,35 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Admin - ZapaShop</title>
+    <title>Panel de Control - ZapaShop</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="/styles.css">
 </head>
-<body class="bg-gray-50 font-sans">
-
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <a href="/" class="flex items-center gap-2">
-                    <i data-lucide="shopping-bag" class="w-8 h-8 text-blue-600"></i>
-                    <span class="text-xl font-bold text-gray-900">ZapaShop</span>
-                </a>
-                <nav class="hidden md:flex items-center gap-6">
-                    <a href="/" class="text-gray-700 hover:text-blue-600 transition-colors">Inicio</a>
-                    <a href="/carrito" class="text-gray-700 hover:text-blue-600 transition-colors">Carrito</a>
-                    <a href="/perfil" class="text-gray-700 hover:text-blue-600 transition-colors">Mi Perfil</a>
-                    <a href="/admin" class="text-red-600 font-bold underline">Admin</a>
-                </nav>
-            </div>
-        </div>
-    </header>
-
-    <main class="max-w-4xl mx-auto py-12 px-4">
-        <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-            <div class="mb-8">
-                <h2 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
+<body class="bg-gray-100 font-sans">
+    <div class="min-h-screen flex flex-col items-center justify-center p-6">
+        <div class="bg-white w-full max-w-md p-8 rounded-3xl shadow-xl border border-gray-200">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="p-3 bg-blue-100 rounded-2xl">
                     <i data-lucide="layout-dashboard" class="text-blue-600"></i>
-                    Panel de Administración
-                </h2>
-                <p class="text-gray-500 mt-2">Agrega nuevos productos al catálogo general.</p>
-            </div>
-            
-            <form id="adminForm" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Nombre del Zapato</label>
-                        <input type="text" id="adminNombre" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Ej: Jordan Retro 4">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Precio ($MXN)</label>
-                        <input type="number" id="adminPrecio" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="2999">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Categoría</label>
-                        <select id="adminCategoria" class="w-full p-3 border border-gray-300 rounded-lg bg-white outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="Sneakers">Sneakers</option>
-                            <option value="Botas">Botas</option>
-                            <option value="Deportivos">Deportivos</option>
-                            <option value="Formal">Formal</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">URL de Imagen</label>
-                        <input type="url" id="adminImg" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="https://images.unsplash.com/...">
-                    </div>
                 </div>
+                <h1 class="text-2xl font-black text-gray-800">Panel Admin</h1>
+            </div>
+
+            <form id="formAdmin" class="space-y-4">
+                <input type="text" id="adminNombre" placeholder="Nombre del modelo" required class="w-full p-4 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="number" id="adminPrecio" placeholder="Precio ($)" required class="w-full p-4 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="text" id="adminImg" placeholder="Link de la imagen (URL)" required class="w-full p-4 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
                 
-                <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg flex items-center justify-center gap-2">
-                    <i data-lucide="plus-circle" class="w-5 h-5"></i>
-                    Publicar Producto
+                <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg">
+                    SUBIR AL CATÁLOGO
                 </button>
             </form>
+            
+            <a href="/" class="block text-center mt-6 text-gray-400 hover:text-gray-600 text-sm font-medium transition-colors">
+                ← Volver a la tienda
+            </a>
         </div>
-    </main>
-
-    <footer class="bg-gray-900 text-white py-8 mt-12">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-gray-400">© 2026 ZapaShop. Panel de Control Interno.</p>
-        </div>
-    </footer>
-
+    </div>
     <script src="/app.js"></script>
     <script>lucide.createIcons();</script>
 </body>
