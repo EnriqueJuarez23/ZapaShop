@@ -12,25 +12,40 @@ const TIENDAS_FISICAS = [
 async function cargarZapatos() {
     const grid = document.getElementById('productsGrid');
     const filtro = document.getElementById('filtroCategoria');
+    // Usamos el ID exacto que tienes en tu HTML
+    const buscador = document.getElementById('searchInput'); 
+    
     if (!grid) return;
 
     try {
         const respuesta = await fetch(API_URL);
         const todosLosZapatos = await respuesta.json();
+        
         const categoriaSeleccionada = filtro ? filtro.value : 'Todos';
+        
+        // --- SEGURIDAD: Si el buscador no existe o no tiene valor, usamos texto vacío ---
+        const textoBusqueda = (buscador && buscador.value) ? buscador.value.toLowerCase() : '';
 
-        // 1. Filtrar productos activos y por categoría
         const zapatosFiltrados = todosLosZapatos.filter(z => {
             const pasaActivo = z.activo !== false;
             const pasaCategoria = (categoriaSeleccionada === 'Todos' || z.categoria === categoriaSeleccionada);
-            return pasaActivo && pasaCategoria;
+            // Comparamos el nombre (ej. "Nike Air Max 270") con lo que escribió el usuario
+            const pasaBusqueda = z.nombre.toLowerCase().includes(textoBusqueda);
+            
+            return pasaActivo && pasaCategoria && pasaBusqueda;
         });
 
+        // Limpiamos el contenedor antes de renderizar
         grid.innerHTML = ''; 
 
-        // 2. Renderizar cada zapato
+        if (zapatosFiltrados.length === 0) {
+            grid.innerHTML = `<div class="col-span-full text-center py-20 text-slate-400 font-medium">
+                                No se encontraron modelos que coincidan con "${textoBusqueda}"
+                              </div>`;
+            return;
+        }
+
         zapatosFiltrados.forEach(zapato => { 
-            // Validamos que el stock sea un número. Si no existe, es 0.
             const stockReal = Number(zapato.stock);
             const tallasDisponibles = zapato.tallas || [25, 26, 27, 28, 29];
             const imagenZapato = zapato.img || zapato.imagen || 'https://placehold.co/600x600?text=Sneaker';
@@ -39,17 +54,17 @@ async function cargarZapatos() {
             <div class="bg-white rounded-[2.5rem] p-3 shadow-sm border border-slate-100 group transition-all duration-500 ${stockReal <= 0 ? 'opacity-60 grayscale' : ''}">
                 <div class="relative overflow-hidden rounded-[2rem] bg-slate-50">
                     <img src="${imagenZapato}" class="w-full h-80 md:h-64 object-cover">
-<div class="absolute bottom-4 right-4">
-            ${stockReal > 0 
-                ? `<span class="bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-lg">EN STOCK: ${stockReal}</span>`
-                : `<span class="bg-rose-500 text-white text-[10px] font-bold px-3 py-1 rounded-lg">AGOTADO</span>`
-            }
-        </div>                    
+                    <div class="absolute bottom-4 right-4">
+                        ${stockReal > 0 
+                            ? `<span class="bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-lg">EN STOCK: ${stockReal}</span>`
+                            : `<span class="bg-rose-500 text-white text-[10px] font-bold px-3 py-1 rounded-lg">AGOTADO</span>`
+                        }
+                    </div>
                 </div>
 
                 <div class="p-6">
                     <h3 class="text-xl font-black text-slate-800 mb-4">${zapato.nombre}</h3>
-                    
+
                     <div class="flex justify-between items-end gap-4">
                         <div>
                             <label class="block text-[10px] font-black text-slate-400 uppercase mb-2">Talla</label>
@@ -64,7 +79,7 @@ async function cargarZapatos() {
 
                     <div class="mt-6">
                         ${stockReal > 0
-                            ? `<button onclick="prepararAgregado(${zapato.id}, '${zapato.nombre}', ${zapato.precio}, ${stockReal})" 
+                            ? `<button onclick="prepararAgregado(${zapato.id}, '${zapato.nombre}', ${zapato.precio}, ${stockReal}, '${imagenZapato}')" 
                                        class="w-full bg-blue-600 hover:bg-black text-white font-black py-4 rounded-2xl transition-all uppercase text-xs tracking-widest active:scale-95 shadow-md shadow-blue-100">
                                     Agregar al Carrito
                                </button>`
@@ -85,13 +100,13 @@ async function cargarZapatos() {
 
 // --- SECCIÓN: CARRITO ---
 
-function prepararAgregado(id, nombre, precio, stock) {
+function prepararAgregado(id, nombre, precio, stock, img) {
     const talla = document.getElementById(`talla-${id}`).value;
-    agregarAlCarrito(id, nombre, precio, talla, stock);
+    agregarAlCarrito(id, nombre, precio, talla, stock, img);
 }
 
 // Agregamos 'stockDisponible' como parámetro
-function agregarAlCarrito(id, nombre, precio, talla, stockDisponible) {
+function agregarAlCarrito(id, nombre, precio, talla, stockDisponible, img) {
     // 1. Contar cuántos de este mismo ID ya hay en el carrito
     const cantidadEnCarrito = carrito.filter(item => item.id === id).length;
 
@@ -112,6 +127,7 @@ function agregarAlCarrito(id, nombre, precio, talla, stockDisponible) {
         nombre, 
         precio, 
         talla, 
+        img,
         metodo: 'envio', 
         tiendaId: null 
     });
