@@ -6,66 +6,85 @@
     <title>Tu Carrito - ZapaShop</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="/styles.css">
 </head>
-<body class="bg-gray-50 font-sans">
+<body class="bg-slate-50 font-sans antialiased text-slate-900">
 
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <a href="/" class="flex items-center gap-2">
-                    <i data-lucide="shopping-bag" class="w-8 h-8 text-blue-600"></i>
-                    <span class="text-xl font-bold text-gray-900">ZapaShop</span>
-                </a>
-                <nav class="hidden md:flex items-center gap-6">
-                    <a href="/" class="text-gray-700 hover:text-blue-600">Inicio</a>
-                    <a href="/carrito" class="text-blue-600 font-bold">Carrito</a>
-                    <a href="/perfil" class="text-gray-700 hover:text-blue-600">Mi Perfil</a>
-                    <a href="/admin" class="text-red-600 font-bold">Admin</a>
-                </nav>
+<header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
+        <a href="/" class="text-xl md:text-2xl font-black text-blue-600 tracking-tight flex items-center gap-2">
+            <div class="bg-blue-600 p-2 rounded-lg text-white hidden xs:block">
+                <i data-lucide="shopping-bag" class="w-5 h-5"></i>
             </div>
-        </div>
-    </header>
+            ZapaShop
+        </a>
 
-    <main class="max-w-4xl mx-auto py-12 px-4">
-        <h2 class="text-4xl font-extrabold text-gray-900 mb-10 flex items-center gap-4">
-            <i data-lucide="shopping-cart" class="w-10 h-10 text-blue-600"></i>
-            Tu Carrito
-        </h2>
+        <nav class="flex gap-3 sm:gap-6 md:gap-8 font-bold text-[11px] sm:text-xs md:text-sm text-slate-600">
+            <a href="/" class="hover:text-blue-600 transition-colors">Inicio</a>
+            <a href="/catalogo" class="hover:text-blue-600 transition-colors">Catálogo</a>
+            <a href="/carrito" class="text-blue-600 border-b-2 border-blue-600">Carrito</a>
+        </nav>
+<div class="flex items-center gap-2 md:gap-3">
+    <div class="flex items-center gap-1.5 md:gap-2 mr-1">
+        <i data-lucide="user" class="w-4 h-4 text-slate-400 md:w-5 md:h-5"></i>
+<span class="text-xs md:text-sm font-black text-slate-800">{{user.username}}</span>
+    </div>
 
+    <a href="/perfil" class="bg-blue-600 text-white px-3 md:px-5 py-2 rounded-full text-[9px] md:text-xs font-black uppercase tracking-widest hover:bg-black transition-all">
+        Perfil
+    </a>
+</div>
+</header>
+
+    <main class="max-w-7xl mx-auto py-8 md:py-12 px-4">
+<h2 class="text-3xl md:text-4xl font-black text-gray-900 mb-8 md:mb-10 flex items-center gap-4">
+    <i data-lucide="shopping-cart" class="w-8 h-8 md:w-10 md:h-10 text-blue-600"></i>
+    Tu Carrito
+</h2>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div class="lg:col-span-2 space-y-4">
-                <div id="listaCarrito" class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+<div id="listaCarrito" class="space-y-6">
                     <div class="text-center py-10">
                         <i data-lucide="shopping-basket" class="w-16 h-16 text-gray-200 mx-auto mb-4"></i>
                         <p class="text-gray-500 text-lg">Tu carrito está esperando que elijas algo genial.</p>
-                        <a href="/#catalogo" class="text-blue-600 font-medium hover:underline mt-2 inline-block">Ir a la tienda</a>
+                        <a href="/catalogo" class="text-blue-600 font-medium hover:underline mt-2 inline-block">Ir a la tienda</a>
                     </div>
                 </div>
             </div>
 
-            <div class="lg:col-span-1">
-                <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 sticky top-24">
-                    <h3 class="text-xl font-bold mb-6">Resumen de compra</h3>
-                    <div class="space-y-4 text-gray-600">
-                        <div class="flex justify-between">
-                            <span>Subtotal</span>
-                            <span id="subtotalCarrito">$0.00</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Envío</span>
-                            <span class="text-green-600 font-medium">Gratis</span>
-                        </div>
-                        <div class="border-t pt-4 flex justify-between items-center text-gray-900">
-                            <span class="text-lg font-bold">Total</span>
-                            <span id="totalCarrito" class="text-2xl font-black text-blue-600">$0.00</span>
-                        </div>
-                    </div>
-                    <button onclick="alert('¡Compra procesada!')" class="w-full mt-8 bg-black text-white py-4 rounded-xl font-bold hover:bg-gray-800 transition-colors shadow-lg">
-                        Finalizar Pedido
-                    </button>
+<div class="lg:col-span-1">
+    <div class="bg-slate-900 rounded-[2.5rem] p-6 md:p-8 text-white shadow-2xl sticky top-24">
+        <h2 class="text-xl md:text-2xl font-black mb-6 md:mb-8 flex items-center gap-3">
+            <i data-lucide="receipt" class="w-6 h-6 text-blue-400"></i>
+            Resumen
+        </h2>
+        
+        <div class="space-y-4">
+            <div class="flex justify-between text-slate-400 text-sm font-medium">
+                <span>Subtotal</span>
+                <span id="subtotalCarrito" class="text-white font-bold">$0.00</span>
+            </div>
+            <div class="flex justify-between text-slate-400 text-sm font-medium">
+                <span>Envío</span>
+                <span class="text-emerald-400 font-bold uppercase">Gratis</span>
+            </div>
+            
+            <div class="border-t border-slate-800 pt-4 mt-4">
+                <div class="flex justify-between items-end">
+                    <span class="text-xs font-black text-slate-500 uppercase tracking-widest">Total a pagar</span>
+                    <span id="totalCarrito" class="text-2xl md:text-3xl font-black text-blue-400">$0.00</span>
                 </div>
             </div>
+
+            <button onclick="finalizarPedido()" class="w-full bg-blue-600 hover:bg-white hover:text-blue-600 text-white font-black py-4 rounded-2xl transition-all duration-300 uppercase text-xs tracking-widest mt-6">
+                Confirmar Pedido
+            </button>    
+    <p class="text-[10px] text-center mt-6 text-slate-400 font-medium">
+        🔒 Pago seguro y encriptado
+    </p>
+</div>
+
         </div>
     </main>
 
@@ -74,7 +93,14 @@
             <p class="text-gray-400">© 2026 ZapaShop. Todos los derechos reservados.</p>
         </div>
     </footer>
-
+<script>
+    // Esto fuerza a que se pinte el carrito en cuanto carga esta página
+    document.addEventListener("DOMContentLoaded", () => {
+        if (typeof actualizarVistaCarrito === 'function') {
+            actualizarVistaCarrito();
+        }
+    });
+</script>
     <script src="/app.js"></script>
     <script>lucide.createIcons();</script>
 </body>

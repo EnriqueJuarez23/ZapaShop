@@ -2,36 +2,113 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Control - ZapaShop</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-gray-100 font-sans">
-    <div class="min-h-screen flex flex-col items-center justify-center p-6">
-        <div class="bg-white w-full max-w-md p-8 rounded-3xl shadow-xl border border-gray-200">
-            <div class="flex items-center gap-3 mb-6">
-                <div class="p-3 bg-blue-100 rounded-2xl">
-                    <i data-lucide="layout-dashboard" class="text-blue-600"></i>
-                </div>
-                <h1 class="text-2xl font-black text-gray-800">Panel Admin</h1>
-            </div>
+<body class="bg-slate-50 font-sans text-slate-900">
 
-            <form id="formAdmin" class="space-y-4">
-                <input type="text" id="adminNombre" placeholder="Nombre del modelo" required class="w-full p-4 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                <input type="number" id="adminPrecio" placeholder="Precio ($)" required class="w-full p-4 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                <input type="text" id="adminImg" placeholder="Link de la imagen (URL)" required class="w-full p-4 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                
-                <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg">
-                    SUBIR AL CATÁLOGO
-                </button>
-            </form>
-            
-            <a href="/" class="block text-center mt-6 text-gray-400 hover:text-gray-600 text-sm font-medium transition-colors">
-                ← Volver a la tienda
-            </a>
+    <div class="min-h-screen flex flex-col lg:flex-row">
+        <aside class="w-full lg:w-64 bg-slate-900 text-white p-6">
+            <h2 class="text-2xl font-black mb-8 text-blue-400">ZapaShop</h2>
+            <nav class="space-y-4">
+                <a href="/" class="flex items-center gap-3 opacity-70 hover:opacity-100 transition"><i data-lucide="home"></i> Inicio</a>
+                <a href="/admin" class="flex items-center gap-3 text-blue-400 font-bold bg-slate-800 p-3 rounded-xl"><i data-lucide="layout-dashboard"></i> Inventario</a>
+                <button onclick="cerrarSesion()" class="flex items-center gap-3 text-red-400 mt-10"><i data-lucide="log-out"></i> Salir</button>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-4 lg:p-10 overflow-y-auto">
+            <div class="max-w-6xl mx-auto">
+                <header class="mb-10 flex justify-between items-center">
+                    <div>
+                        <h1 class="text-4xl font-black tracking-tight">Panel de Control</h1>
+                        <p class="text-slate-500 font-medium">Gestiona el inventario de la tienda en tiempo real.</p>
+                    </div>
+                </header>
+
+                <div class="grid lg:grid-cols-3 gap-8 items-start">
+                    
+                    <div class="lg:col-span-1 bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+                        <div class="flex items-center gap-2 mb-6 text-blue-600">
+                            <i data-lucide="plus-circle"></i>
+                            <h2 class="font-bold uppercase tracking-wider text-sm">Nuevo Producto</h2>
+                        </div>
+
+                   <form id="adminForm" class="space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Nombre del Modelo</label>
+            <input type="text" id="adminNombre" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
         </div>
+        <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Precio (MXN)</label>
+            <input type="number" id="adminPrecio" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Categoría</label>
+            <select id="adminCategoria" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="Sneakers">Sneakers</option>
+                <option value="Botas">Botas</option>
+                <option value="Deportivos">Deportivos</option>
+                <option value="Formal">Formal</option>
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">URL de la Imagen</label>
+            <input type="url" id="adminImg" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+<div>
+    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Cantidad en Stock</label>
+    <input type="number" id="adminStock" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+</div>
     </div>
+    <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black hover:bg-blue-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-200">
+        <i data-lucide="plus" class="w-5 h-5"></i> GUARDAR PRODUCTO
+    </button>
+</form>
+
+                    </div>
+
+                    <div class="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-white">
+                            <h2 class="font-bold text-lg">Zapatos en Stock</h2>
+                            <div class="flex gap-2">
+                                <button onclick="cargarTablaAdmin()" class="p-2 hover:bg-slate-100 rounded-lg transition"><i data-lucide="refresh-cw" class="w-5 h-5 text-slate-400"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead class="bg-slate-50/50">
+                                    <tr class="text-slate-400 text-[11px] uppercase tracking-widest">
+                                        <th class="px-6 py-4">Producto</th>
+                                        <th class="px-6 py-4">Precio</th>
+                                        <th class="px-6 py-4">Estado</th>
+                                        <th class="px-6 py-4 text-right">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaZapatos" class="divide-y divide-slate-50">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
     <script src="/app.js"></script>
-    <script>lucide.createIcons();</script>
+    <script>
+        // Protección de Ruta
+        const validacion = JSON.parse(localStorage.getItem('usuario_logueado'));
+        if (!validacion || !validacion.email.endsWith('@zapashop.com')) {
+            window.location.href = "/";
+        }
+        
+        // Inicializar Iconos
+        lucide.createIcons();
+    </script>
 </body>
 </html>

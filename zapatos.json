@@ -1,0 +1,128 @@
+[
+  {
+    "id": 1,
+    "nombre": "Nike Air Max 270",
+    "precio": 3200,
+    "categoria": "Sneakers",
+    "img": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600",
+    "stock": 17,
+    "activo": true
+  },
+  {
+    "id": 2,
+    "nombre": "Adidas Ultraboost",
+    "precio": 3800,
+    "categoria": "Sneakers",
+    "img": "https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?w=600",
+    "stock": 11,
+    "activo": true
+  },
+  {
+    "id": 3,
+    "nombre": "Jordan Retro 4",
+    "precio": 4500,
+    "categoria": "Sneakers",
+    "img": "https://leplugmx.com/cdn/shop/files/FullSizeRender_4f4d87e1-8638-478d-a798-29570c188147_1200x1200.jpg?v=1725241733",
+    "stock": 9,
+    "activo": true
+  },
+  {
+    "id": 4,
+    "nombre": "Timberland Classic",
+    "precio": 3500,
+    "categoria": "Botas",
+    "img": "https://assets.timberland.com/images/t_img/f_auto,h_650,e_sharpen:60,w_650/dpr_2.0/v1719369337/TB118094231-HERO/Mens-Timberland-Classic-6Inch-Waterproof-Boot-TBL-HERO.png",
+    "stock": 38,
+    "activo": true
+  },
+  {
+    "id": 5,
+    "nombre": "Dr. Martens 1460",
+    "precio": 4200,
+    "categoria": "Botas",
+    "img": "https://http2.mlstatic.com/D_NQ_NP_972008-MLM73180724975_112023-O-dr-martens-1460-zipped-bota-negro.webp",
+    "stock": 24,
+    "activo": true
+  },
+  {
+    "id": 6,
+    "nombre": "Puma Velocity Nitro",
+    "precio": 2800,
+    "categoria": "Deportivos",
+    "img": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=600",
+    "stock": 12,
+    "activo": true
+  },
+  {
+    "id": 7,
+    "nombre": "Asics Gel-Kayano",
+    "precio": 3100,
+    "categoria": "Deportivos",
+    "img": "https://images.unsplash.com/photo-1539185441755-769473a23570?w=600",
+    "stock": 43,
+    "activo": true
+  },
+  {
+    "id": 8,
+    "nombre": "Oxford Cuero Café",
+    "precio": 2200,
+    "categoria": "Formal",
+    "img": "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=600",
+    "stock": 13,
+    "activo": true
+  },
+  {
+    "id": 9,
+    "nombre": "Loafers Elegance",
+    "precio": 1950,
+    "categoria": "Formal",
+    "img": "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=600",
+    "stock": 24,
+    "activo": true
+  },
+  {
+    "id": 10,
+    "nombre": "Jordan Air 1 Retro High Og J Balvin",
+    "precio": 11000,
+    "categoria": "Sneakers",
+    "img": "https://m.media-amazon.com/images/I/71ngCgh8FvL._AC_SX575_.jpg",
+    "stock": 54,
+    "activo": true
+  },
+  {
+    "id": 11,
+    "nombre": "Jeep 10751 Dama Casquillo",
+    "precio": 3000,
+    "stock": 88,
+    "categoria": "Botas",
+    "img": "https://www.jeepfootwear.com.mx/cdn/shop/files/jeep_-_fleetvan_10751_nobuck_tinto_-_3_cbcbde9b-a111-4a65-b79f-c975b4b233fc.jpg?v=1768243803&width=493",
+    "activo": true
+  },
+  {
+    "id": 1778413162457,
+    "nombre": "Adidas SL 72 RS",
+    "precio": 4500,
+    "stock": 23,
+    "categoria": "Sneakers",
+    "img": "https://dpjye2wk9gi5z.cloudfront.net/wcsstore/ExtendedSitesCatalogAssetStore/images/catalog/zoom/1032400-0703V1.jpg",
+    "activo": true
+  },
+  {
+    "id": 1778420164162,
+    "nombre": "Zapatos formales derby",
+    "precio": 3000,
+    "stock": 23,
+    "categoria": "Formal",
+    "img": "https://jeanpierre.com.mx/cdn/shop/files/E241304-CAFE_3a253cfc-1b6a-46d6-8ef1-32ff68cfcd91.jpg?v=1750170634&width=990",
+    "activo": true
+  },
+  {
+    "id": 1778460261516,
+    "nombre": "Zapatos Deportivos para Mujer",
+    "precio": 760,
+    "stock": 22,
+    "categoria": "Deportivos",
+    "img": "https://m.media-amazon.com/images/I/61X85qdpukL._AC_SY575_.jpg",
+    "activo": true
+  }
+]

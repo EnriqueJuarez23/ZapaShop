@@ -1,0 +1,36 @@
+<header class="bg-white border-b border-slate-100 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center gap-2">
+        
+        <a href="/" class="flex items-center gap-2 min-w-fit">
+            <div class="bg-blue-600 p-2 rounded-lg text-white">
+                <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xl font-black text-blue-600 tracking-tight hidden xs:block">ZapaShop</span>
+        </a>
+
+        <nav class="flex items-center gap-3 sm:gap-6 md:gap-8 font-bold text-[10px] sm:text-xs md:text-sm text-slate-600">
+            <a href="/" class="hover:text-blue-600">Inicio</a>
+            <a href="/catalogo" class="hover:text-blue-600">Catálogo</a>
+            <a href="/carrito" class="hover:text-blue-600">Carrito</a>
+        </nav>
+
+        <div class="flex items-center gap-2 sm:gap-4 ml-auto">
+            {{#if user}}
+                <div class="flex items-center gap-2">
+                    <div class="hidden sm:flex flex-col items-end leading-none">
+                        <span class="text-[9px] text-slate-400 font-black uppercase">Hola,</span>
+                        <span class="text-xs md:text-sm font-black text-slate-800">{{user.username}}</span>
+                    </div>
+                    <a href="/perfil" class="bg-slate-100 p-2 md:p-2.5 rounded-full">
+                        <i data-lucide="user" class="w-4 h-4 md:w-5 md:h-5"></i>
+                    </a>
+                </div>
+            {{else}}
+                <div class="flex items-center gap-2">
+                    <a href="/login" class="text-[10px] md:text-sm font-black text-slate-700">Entrar</a>
+                    <a href="/registro" class="bg-blue-600 text-white px-4 py-2 rounded-full text-[9px] md:text-xs font-black uppercase">Unirse</a>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+</header>

@@ -76,7 +76,12 @@
         <h2 class="text-3xl font-black text-gray-900">¡Hola, <span id="nombreUsuarioPerfil"></span>!</h2>
         <p class="text-gray-500">Estás en tu zona segura. Aquí puedes ver tus pedidos y gestionar tu cuenta.</p>
     </div>
-    
+
+    <a href="/admin" id="btnIrAdmin" class="hidden w-full bg-slate-900 text-white py-4 rounded-xl font-black hover:bg-black transition-all flex items-center justify-center gap-2">
+        <i data-lucide="shield-check" class="w-5 h-5"></i>
+        PANEL DE ADMINISTRADOR
+    </a>
+
     <button onclick="cerrarSesion()" class="w-full bg-red-100 text-red-600 py-4 rounded-xl font-bold hover:bg-red-200 transition-all flex items-center justify-center gap-2">
         <i data-lucide="log-out" class="w-5 h-5"></i>
         CERRAR SESIÓN
