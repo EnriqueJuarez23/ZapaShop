@@ -5,7 +5,7 @@
     "precio": 3200,
     "categoria": "Sneakers",
     "img": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600",
-    "stock": 17,
+    "stock": 11,
     "activo": true
   },
   {
@@ -14,7 +14,7 @@
     "precio": 3800,
     "categoria": "Sneakers",
     "img": "https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?w=600",
-    "stock": 11,
+    "stock": 4,
     "activo": true
   },
   {
@@ -23,7 +23,7 @@
     "precio": 4500,
     "categoria": "Sneakers",
     "img": "https://leplugmx.com/cdn/shop/files/FullSizeRender_4f4d87e1-8638-478d-a798-29570c188147_1200x1200.jpg?v=1725241733",
-    "stock": 9,
+    "stock": 5,
     "activo": true
   },
   {
@@ -41,7 +41,7 @@
     "precio": 4200,
     "categoria": "Botas",
     "img": "https://http2.mlstatic.com/D_NQ_NP_972008-MLM73180724975_112023-O-dr-martens-1460-zipped-bota-negro.webp",
-    "stock": 24,
+    "stock": 23,
     "activo": true
   },
   {
@@ -77,7 +77,7 @@
     "precio": 1950,
     "categoria": "Formal",
     "img": "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=600",
-    "stock": 24,
+    "stock": 23,
     "activo": true
   },
   {
@@ -86,7 +86,7 @@
     "precio": 11000,
     "categoria": "Sneakers",
     "img": "https://m.media-amazon.com/images/I/71ngCgh8FvL._AC_SX575_.jpg",
-    "stock": 54,
+    "stock": 53,
     "activo": true
   },
   {
@@ -111,7 +111,7 @@
     "id": 1778420164162,
     "nombre": "Zapatos formales derby",
     "precio": 3000,
-    "stock": 23,
+    "stock": 22,
     "categoria": "Formal",
     "img": "https://jeanpierre.com.mx/cdn/shop/files/E241304-CAFE_3a253cfc-1b6a-46d6-8ef1-32ff68cfcd91.jpg?v=1750170634&width=990",
     "activo": true
@@ -120,7 +120,7 @@
     "id": 1778460261516,
     "nombre": "Zapatos Deportivos para Mujer",
     "precio": 760,
-    "stock": 22,
+    "stock": 21,
     "categoria": "Deportivos",
     "img": "https://m.media-amazon.com/images/I/61X85qdpukL._AC_SY575_.jpg",
     "activo": true

@@ -6,79 +6,82 @@
     <title>Panel de Control - ZapaShop</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-slate-50 font-sans text-slate-900">
 
     <div class="min-h-screen flex flex-col lg:flex-row">
-        <aside class="w-full lg:w-64 bg-slate-900 text-white p-6">
+        <!-- Sidebar lateral -->
+        <aside class="w-full lg:w-64 bg-slate-900 text-white p-6 flex-shrink-0">
             <h2 class="text-2xl font-black mb-8 text-blue-400">ZapaShop</h2>
             <nav class="space-y-4">
                 <a href="/" class="flex items-center gap-3 opacity-70 hover:opacity-100 transition"><i data-lucide="home"></i> Inicio</a>
-                <a href="/admin" class="flex items-center gap-3 text-blue-400 font-bold bg-slate-800 p-3 rounded-xl"><i data-lucide="layout-dashboard"></i> Inventario</a>
-                <button onclick="cerrarSesion()" class="flex items-center gap-3 text-red-400 mt-10"><i data-lucide="log-out"></i> Salir</button>
+                <a href="/admin" class="flex items-center gap-3 text-blue-400 font-bold bg-slate-800 p-3 rounded-xl"><i data-lucide="layout-dashboard"></i> Panel General</a>
+                <button onclick="cerrarSesion()" class="flex items-center gap-3 text-red-400 mt-10 cursor-pointer"><i data-lucide="log-out"></i> Salir</button>
             </nav>
         </aside>
 
+        <!-- Contenido Principal -->
         <main class="flex-1 p-4 lg:p-10 overflow-y-auto">
-            <div class="max-w-6xl mx-auto">
-                <header class="mb-10 flex justify-between items-center">
+            <div class="max-w-7xl mx-auto space-y-10">
+                
+                <header class="flex justify-between items-center">
                     <div>
                         <h1 class="text-4xl font-black tracking-tight">Panel de Control</h1>
-                        <p class="text-slate-500 font-medium">Gestiona el inventario de la tienda en tiempo real.</p>
+                        <p class="text-slate-500 font-medium">Gestiona el inventario y los pedidos de los clientes en tiempo real.</p>
                     </div>
                 </header>
 
+                <!-- BLOQUE 1: INVENTARIO (Formulario + Tabla de Zapatos) -->
                 <div class="grid lg:grid-cols-3 gap-8 items-start">
                     
+                    <!-- Formulario de Nuevo Producto -->
                     <div class="lg:col-span-1 bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
                         <div class="flex items-center gap-2 mb-6 text-blue-600">
                             <i data-lucide="plus-circle"></i>
                             <h2 class="font-bold uppercase tracking-wider text-sm">Nuevo Producto</h2>
                         </div>
 
-                   <form id="adminForm" class="space-y-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Nombre del Modelo</label>
-            <input type="text" id="adminNombre" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-        <div>
-            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Precio (MXN)</label>
-            <input type="number" id="adminPrecio" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-        <div>
-            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Categoría</label>
-            <select id="adminCategoria" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="Sneakers">Sneakers</option>
-                <option value="Botas">Botas</option>
-                <option value="Deportivos">Deportivos</option>
-                <option value="Formal">Formal</option>
-            </select>
-        </div>
-        <div>
-            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">URL de la Imagen</label>
-            <input type="url" id="adminImg" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-<div>
-    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Cantidad en Stock</label>
-    <input type="number" id="adminStock" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-</div>
-    </div>
-    <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black hover:bg-blue-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-200">
-        <i data-lucide="plus" class="w-5 h-5"></i> GUARDAR PRODUCTO
-    </button>
-</form>
-
+                        <form id="adminForm" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Nombre del Modelo</label>
+                                <input type="text" id="adminNombre" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Precio (MXN)</label>
+                                <input type="number" id="adminPrecio" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Categoría</label>
+                                <select id="adminCategoria" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                    <option value="Sneakers">Sneakers</option>
+                                    <option value="Botas">Botas</option>
+                                    <option value="Deportivos">Deportivos</option>
+                                    <option value="Formal">Formal</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">URL de la Imagen</label>
+                                <input type="url" id="adminImg" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Cantidad en Stock</label>
+                                <input type="number" id="adminStock" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black hover:bg-blue-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-200 uppercase text-xs tracking-widest cursor-pointer mt-2">
+                                <i data-lucide="plus" class="w-5 h-5"></i> GUARDAR PRODUCTO
+                            </button>
+                        </form>
                     </div>
 
+                    <!-- Tabla de Zapatos en Stock -->
                     <div class="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
                         <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-white">
-                            <h2 class="font-bold text-lg">Zapatos en Stock</h2>
-                            <div class="flex gap-2">
-                                <button onclick="cargarTablaAdmin()" class="p-2 hover:bg-slate-100 rounded-lg transition"><i data-lucide="refresh-cw" class="w-5 h-5 text-slate-400"></i></button>
-                            </div>
+                            <h2 class="font-bold text-lg text-slate-800">Zapatos en Stock</h2>
+                            <button onclick="cargarTablaAdmin()" class="p-2 hover:bg-slate-100 rounded-lg transition cursor-pointer">
+                                <i data-lucide="refresh-cw" class="w-5 h-5 text-slate-400"></i>
+                            </button>
                         </div>
-
                         <div class="overflow-x-auto">
                             <table class="w-full text-left">
                                 <thead class="bg-slate-50/50">
@@ -89,26 +92,53 @@
                                         <th class="px-6 py-4 text-right">Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody id="tablaZapatos" class="divide-y divide-slate-50">
-                                    </tbody>
+                                <tbody id="tablaZapatos" class="divide-y divide-slate-50"></tbody>
                             </table>
                         </div>
                     </div>
+
                 </div>
+
+                <!-- BLOQUE 2: GESTIÓN DE PEDIDOS DE CLIENTES (Ubicado Abajo y a Ancho Completo) -->
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+                    <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center">
+                                <i data-lucide="package-search" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-xl font-black text-slate-900">Gestión de Pedidos de Clientes</h2>
+                                <p class="text-xs text-slate-400">Actualiza el estatus de los envíos o entregas en tiempo real.</p>
+                            </div>
+                        </div>
+                        <button onclick="cargarPedidosAdmin()" class="p-2 hover:bg-slate-100 rounded-lg transition cursor-pointer">
+                            <i data-lucide="refresh-cw" class="w-5 h-5 text-slate-400"></i>
+                        </button>
+                    </div>
+
+                    <!-- Contenedor donde app.js renderiza las tarjetas de pedidos -->
+                    <div id="tablaPedidosAdmin" class="space-y-4">
+                        <p class="text-center py-8 text-slate-400 text-sm">Cargando pedidos de clientes...</p>
+                    </div>
+                </div>
+
             </div>
         </main>
     </div>
 
     <script src="/app.js"></script>
     <script>
-        // Protección de Ruta
+        // Protección de Ruta de Administrador
         const validacion = JSON.parse(localStorage.getItem('usuario_logueado'));
         if (!validacion || !validacion.email.endsWith('@zapashop.com')) {
             window.location.href = "/";
         }
         
-        // Inicializar Iconos
-        lucide.createIcons();
+        // Inicializar Iconos y Cargar Datos
+        document.addEventListener("DOMContentLoaded", () => {
+            if (typeof cargarPedidosAdmin === 'function') cargarPedidosAdmin();
+            if (window.lucide) lucide.createIcons();
+        });
     </script>
 </body>
 </html>
