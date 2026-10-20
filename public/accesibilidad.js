@@ -8,19 +8,20 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarOpcionesGuardadas();
 });
 
-// 1. Inyección del menú flotante de Accesibilidad
+// 1. Inyección del menú flotante de Accesibilidad (Responsivo)
 function inyectarWidgetAccesibilidad() {
     if (document.getElementById('accesibilidad-widget-container')) return;
 
     const html = `
-    <div id="accesibilidad-widget-container" style="position: fixed; top: 100px; left: 20px; z-index: 9998; font-family: sans-serif;">
+    <!-- Posicionado abajo a la izquierda en celular (bottom-6 left-6) para no estorbar el contenido ni empalmarse con el chatbot, y arriba en escritorio (md:top-24 md:bottom-auto) -->
+    <div id="accesibilidad-widget-container" class="fixed bottom-6 left-6 md:top-24 md:bottom-auto z-[9998] font-sans">
         <!-- Botón Flotante -->
         <button id="acc-toggle-btn" title="Menú de Accesibilidad" class="bg-indigo-600 hover:bg-indigo-500 text-white p-3.5 rounded-full shadow-2xl transition-all duration-300 flex items-center justify-center cursor-pointer scale-105 hover:scale-110">
             <i data-lucide="accessibility" class="w-6 h-6"></i>
         </button>
 
-        <!-- Panel de Opciones -->
-        <div id="acc-panel" class="hidden absolute top-14 left-0 w-72 bg-slate-900 border border-slate-800 text-slate-100 rounded-2xl shadow-2xl p-4 space-y-3 text-xs">
+        <!-- Panel de Opciones (Se despliega hacia arriba en móvil y hacia abajo en escritorio) -->
+        <div id="acc-panel" class="hidden absolute bottom-16 left-0 md:bottom-auto md:top-14 w-72 bg-slate-900 border border-slate-800 text-slate-100 rounded-2xl shadow-2xl p-4 space-y-3 text-xs">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                 <h4 class="font-black text-sm text-white flex items-center gap-2">
                     <i data-lucide="accessibility" class="w-4 h-4 text-indigo-400"></i> Accesibilidad
