@@ -1243,3 +1243,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (window.lucide) lucide.createIcons();
 });
+
+// =======================================================
+// --- CONTROL ADMINISTRABLE DE TEMÁTICA HALLOWEEN ---
+// =======================================================
+
+function toggleHalloweenAdmin() {
+    const estadoActual = localStorage.getItem('zapa_halloween_global') === 'true';
+    const nuevoEstado = !estadoActual;
+    
+    localStorage.setItem('zapa_halloween_global', nuevoEstado);
+    aplicarTemaHalloween(nuevoEstado);
+    actualizarBotonAdminHalloween(nuevoEstado);
+
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: nuevoEstado ? '🎃 ¡Halloween Activado!' : '✨ Tema Clásico Restaurado',
+            text: nuevoEstado ? 'La tienda completa ahora luce la versión de temporada.' : 'Se ha restablecido la apariencia estándar de ZapaShop.',
+            icon: nuevoEstado ? 'warning' : 'info',
+            timer: 2000,
+            showConfirmButton: false,
+            toast: true,
+            position: 'top-end'
+        });
+    }
+}
+
+function aplicarTemaHalloween(activo) {
+    if (activo) {
+        document.body.classList.add('halloween-mode');
+    } else {
+        document.body.classList.remove('halloween-mode');
+    }
+}
+
+function actualizarBotonAdminHalloween(activo) {
+    const btn = document.getElementById('btnSwitchHalloween');
+    const txt = document.getElementById('statusHalloweenText');
+    if (!btn || !txt) return;
+
+    if (activo) {
+        btn.className = "px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all duration-300 flex items-center gap-2 cursor-pointer bg-orange-600 text-white shadow-lg shadow-orange-600/30";
+        txt.innerText = "ACTIVADO 🎃";
+    } else {
+        btn.className = "px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all duration-300 flex items-center gap-2 cursor-pointer bg-slate-100 text-slate-600 hover:bg-orange-500 hover:text-white shadow-sm";
+        txt.innerText = "DESACTIVADO";
+    }
+}
+
+// Verificar el estado de la temática al cargar cualquier página
+document.addEventListener('DOMContentLoaded', () => {
+    const estaActivado = localStorage.getItem('zapa_halloween_global') === 'true';
+    aplicarTemaHalloween(estaActivado);
+    actualizarBotonAdminHalloween(estaActivado);
+});

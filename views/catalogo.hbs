@@ -7,10 +7,211 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+    /* ======================================================= */
+    /* --- ZAPASHOP: UNIFICACIÓN DE ESTILOS Y COLORES NEÓN --- */
+    /* ======================================================= */
+
+    /* Fondo general oscuro y elegante */
+    body {
+        background-color: #0b132b !important;
+        color: #f8fafc !important;
+        font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    /* Barra de navegación superior */
+    nav {
+        background-color: #070d1f !important;
+        border-bottom: 2px solid rgba(168, 85, 247, 0.4) !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+    }
+    
+    nav a, nav span {
+        color: #ffffff !important;
+        font-weight: 800 !important;
+    }
+    
+    nav a:hover {
+        color: #f472b6 !important;
+    }
+
+    /* Tarjetas de productos, contenedores del carrito y formularios de envío */
+    .bg-white, #productsGrid > div, .card-custom, div.bg-slate-800, div.bg-slate-900, .cart-item-container {
+        background-color: #161f33 !important; /* Tono azul medianoche exacto de tus vistas */
+        border: 2px solid #3b306b !important; /* Borde lila/morado sutil de las tarjetas */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
+        color: #ffffff !important;
+        border-radius: 1.2rem !important;
+        transition: all 0.3s ease !important;
+    }
+
+    /* Efecto al pasar el cursor sobre las tarjetas o el resumen */
+    #productsGrid > div:hover, .card-custom:hover {
+        border-color: #d946ef !important; /* Se enciende en fucsia al hacer hover */
+        box-shadow: 0 20px 40px rgba(217, 70, 239, 0.25) !important;
+        transform: translateY(-3px);
+    }
+
+    /* Botones principales de acción y "Confirmar Pedido" (Degradado Fucsia/Rosa) */
+    a.bg-blue-600, button.bg-blue-600, .bg-blue-600, button.bg-gradient-to-r, .btn-primary {
+        background: linear-gradient(135deg, #f43f5e 0%, #d946ef 100%) !important;
+        color: #ffffff !important;
+        font-weight: 900 !important;
+        box-shadow: 0 8px 25px rgba(217, 70, 239, 0.4) !important;
+        border: none !important;
+        border-radius: 9999px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    a.bg-blue-600:hover, button.bg-blue-600:hover {
+        background: linear-gradient(135deg, #fb7185 0%, #ec4899 100%) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(236, 72, 153, 0.55) !important;
+    }
+
+    /* Tipografía y textos claros */
+    h1, h2, h3, h4, .text-slate-900, .text-white {
+        color: #ffffff !important;
+        font-weight: 900 !important;
+    }
+
+    p, .text-slate-400, .text-slate-500, .text-slate-600 {
+        color: #94a3b8 !important;
+        font-weight: 600 !important;
+    }
+
+    /* Inputs, selectores de talla y campos del carrito */
+    input, select {
+        background-color: #0b132b !important;
+        border: 2px solid #3b306b !important;
+        color: #ffffff !important;
+        border-radius: 0.75rem !important;
+    }
+
+    input:focus, select:focus {
+        border-color: #d946ef !important;
+        outline: none !important;
+    }
+</style>
+
+    <!-- ESTILOS HALLOWEEN HIGH-VIBRANCY (TARJETAS OSCURAS Y GLOWS) -->
+<style>
+    /* ======================================================= */
+    /* --- ZAPASHOP: HALLOWEEN ULTRA IMMERSIVE --- */
+    /* ======================================================= */
+
+    body.halloween-mode {
+        background: radial-gradient(circle at 50% 0%, #3b0712 0%, #120205 50%, #030001 100%) !important;
+        color: #f3f4f6 !important;
+    }
+
+    /* Decoración tétrica superior en el Index / Banner Principal */
+    body.halloween-mode .hero-section::after,
+    body.halloween-mode header::after {
+        content: "🦇  ¡EDICIÓN ESPECIAL DE TERROR - HALLOWEEN SALE!  🦇";
+        display: block;
+        text-align: center;
+        background: linear-gradient(90deg, #ea580c, #9333ea, #ea580c);
+        color: #ffffff;
+        font-weight: 900;
+        font-size: 0.85rem;
+        padding: 6px;
+        letter-spacing: 2px;
+        text-shadow: 0 0 8px rgba(0,0,0,0.8);
+        animation: pulseGlow 2s infinite;
+    }
+
+    @keyframes pulseGlow {
+        0% { opacity: 0.8; }
+        50% { opacity: 1; text-shadow: 0 0 15px rgba(234, 88, 12, 0.9); }
+        100% { opacity: 0.8; }
+    }
+
+    /* Tarjetas del catálogo con detalles de calabaza y calavera flotantes */
+    body.halloween-mode #productsGrid > div, 
+    body.halloween-mode .card-custom {
+        background: linear-gradient(145deg, #180306 0%, #090002 100%) !important;
+        border: 2px solid #ea580c !important;
+        box-shadow: 0 10px 30px rgba(234, 88, 12, 0.3), inset 0 0 20px rgba(147, 51, 234, 0.15) !important;
+        position: relative;
+    }
+
+    /* Distintivo dinámico de temporada en las tarjetas */
+    body.halloween-mode #productsGrid > div::before {
+        content: "🎃";
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        font-size: 1.3rem;
+        z-index: 10;
+        filter: drop-shadow(0 0 6px #ea580c);
+    }
+
+    body.halloween-mode #productsGrid > div::after {
+        content: "👻";
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 1.1rem;
+        z-index: 10;
+        opacity: 0.8;
+    }
+
+    /* Efecto hover con fuego espectral y elevación */
+    body.halloween-mode #productsGrid > div:hover, 
+    body.halloween-mode .card-custom:hover {
+        border-color: #c084fc !important;
+        box-shadow: 0 22px 45px rgba(192, 132, 252, 0.4), 0 0 30px rgba(234, 88, 12, 0.6) !important;
+        transform: translateY(-6px) scale(1.02);
+    }
+
+    /* Barra de navegación con atmósfera nocturna intensa */
+    body.halloween-mode nav {
+        background-color: #090002 !important;
+        border-bottom: 2px solid #ea580c !important;
+        box-shadow: 0 4px 30px rgba(234, 88, 12, 0.4) !important;
+    }
+
+    /* Botones de acción con estilo de poción mágica / fuego */
+    body.halloween-mode a.bg-blue-600, 
+    body.halloween-mode button.bg-blue-600, 
+    body.halloween-mode .bg-blue-600, 
+    body.halloween-mode button.bg-gradient-to-r,
+    body.halloween-mode .btn-primary {
+        background: linear-gradient(135deg, #c2410c 0%, #7e22ce 100%) !important;
+        color: #ffffff !important;
+        font-weight: 900 !important;
+        box-shadow: 0 8px 25px rgba(194, 65, 12, 0.7) !important;
+        border: 1px solid #fdba74 !important;
+    }
+
+    body.halloween-mode a.bg-blue-600:hover, 
+    body.halloween-mode button.bg-blue-600:hover {
+        background: linear-gradient(135deg, #ea580c 0%, #a855f7 100%) !important;
+        box-shadow: 0 12px 35px rgba(168, 85, 247, 0.8) !important;
+        transform: translateY(-2px);
+    }
+
+    /* Textos y títulos con resplandor tenebroso */
+    body.halloween-mode h1, 
+    body.halloween-mode h2, 
+    body.halloween-mode h3, 
+    body.halloween-mode h4 {
+        color: #ffffff !important;
+        text-shadow: 0 0 10px rgba(234, 88, 12, 0.6);
+    }
+
+    body.halloween-mode p, 
+    body.halloween-mode .text-slate-400, 
+    body.halloween-mode .text-slate-500 {
+        color: #fed7aa !important;
+    }
+</style>
+
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen">
 
-    <!-- Barra de Navegación Responsiva con Menú Hamburguesa Integrado -->
     <nav class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 text-slate-100">
         <div class="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
             <a href="/" class="text-xl md:text-2xl font-black text-blue-500 tracking-tight flex items-center gap-2">
@@ -20,14 +221,12 @@
                 <span>ZapaShop</span>
             </a>
 
-            <!-- Enlaces de Escritorio -->
             <div class="hidden md:flex gap-8 font-bold text-sm text-slate-300">
                 <a href="/" class="hover:text-blue-400 transition-colors">Inicio</a>
                 <a href="/catalogo" class="text-blue-400 border-b-2 border-blue-400">Catálogo</a>
                 <a href="/carrito" class="hover:text-blue-400 transition-colors">Carrito</a>
             </div>
 
-            <!-- Acciones Derecha -->
             <div class="flex items-center gap-3">
                 <a href="/carrito" class="relative group p-2 text-slate-300 hover:text-white">
                     <i data-lucide="shopping-cart" class="w-6 h-6"></i>
@@ -39,7 +238,6 @@
             </div>
         </div>
 
-        <!-- Menú Desplegable Móvil -->
         <div id="menuMovilDesplegable" class="hidden md:hidden bg-slate-950 border-t border-slate-800 px-6 py-5 space-y-4 font-bold text-sm text-slate-300 shadow-2xl">
             <a href="/" class="block hover:text-blue-400 py-1 border-b border-slate-900">🏠 Inicio</a>
             <a href="/catalogo" class="block text-blue-400 py-1 border-b border-slate-900">👟 Catálogo</a>
@@ -73,9 +271,15 @@
         </div>
 
         <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-10">
-            <!-- Los zapatos se cargan dinámicamente aquí -->
+            <!-- Renderizado dinámico desde app.js -->
         </div>
     </main>
+
+    <footer class="bg-slate-900 border-t border-slate-800 text-white py-12 mt-20">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-slate-500 text-xs">© 2026 ZapaShop. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 
     <script src="/app.js"></script>
     <script src="/accesibilidad.js"></script>

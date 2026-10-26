@@ -7,10 +7,127 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+    /* ======================================================= */
+    /* --- ZAPASHOP: UNIFICACIÓN DE ESTILOS Y COLORES NEÓN --- */
+    /* ======================================================= */
+
+    /* Fondo general oscuro y elegante */
+    body {
+        background-color: #0b132b !important;
+        color: #f8fafc !important;
+        font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    /* Barra de navegación superior */
+    nav {
+        background-color: #070d1f !important;
+        border-bottom: 2px solid rgba(168, 85, 247, 0.4) !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+    }
+    
+    nav a, nav span {
+        color: #ffffff !important;
+        font-weight: 800 !important;
+    }
+    
+    nav a:hover {
+        color: #f472b6 !important;
+    }
+
+    /* Tarjetas de productos, contenedores del carrito y formularios de envío */
+    .bg-white, #productsGrid > div, .card-custom, div.bg-slate-800, div.bg-slate-900, .cart-item-container {
+        background-color: #161f33 !important; /* Tono azul medianoche exacto de tus vistas */
+        border: 2px solid #3b306b !important; /* Borde lila/morado sutil de las tarjetas */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
+        color: #ffffff !important;
+        border-radius: 1.2rem !important;
+        transition: all 0.3s ease !important;
+    }
+
+    /* Efecto al pasar el cursor sobre las tarjetas o el resumen */
+    #productsGrid > div:hover, .card-custom:hover {
+        border-color: #d946ef !important; /* Se enciende en fucsia al hacer hover */
+        box-shadow: 0 20px 40px rgba(217, 70, 239, 0.25) !important;
+        transform: translateY(-3px);
+    }
+
+    /* Botones principales de acción y "Confirmar Pedido" (Degradado Fucsia/Rosa) */
+    a.bg-blue-600, button.bg-blue-600, .bg-blue-600, button.bg-gradient-to-r, .btn-primary {
+        background: linear-gradient(135deg, #f43f5e 0%, #d946ef 100%) !important;
+        color: #ffffff !important;
+        font-weight: 900 !important;
+        box-shadow: 0 8px 25px rgba(217, 70, 239, 0.4) !important;
+        border: none !important;
+        border-radius: 9999px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    a.bg-blue-600:hover, button.bg-blue-600:hover {
+        background: linear-gradient(135deg, #fb7185 0%, #ec4899 100%) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(236, 72, 153, 0.55) !important;
+    }
+
+    /* Tipografía y textos claros */
+    h1, h2, h3, h4, .text-slate-900, .text-white {
+        color: #ffffff !important;
+        font-weight: 900 !important;
+    }
+
+    p, .text-slate-400, .text-slate-500, .text-slate-600 {
+        color: #94a3b8 !important;
+        font-weight: 600 !important;
+    }
+
+    /* Inputs, selectores de talla y campos del carrito */
+    input, select {
+        background-color: #0b132b !important;
+        border: 2px solid #3b306b !important;
+        color: #ffffff !important;
+        border-radius: 0.75rem !important;
+    }
+
+    input:focus, select:focus {
+        border-color: #d946ef !important;
+        outline: none !important;
+    }
+</style>
+
+    <!-- ESTILOS HALLOWEEN HIGH-VIBRANCY -->
+    <style>
+        body.halloween-mode {
+            background-color: #080514 !important;
+            color: #f3f4f6 !important;
+            background-image: radial-gradient(circle at 50% 0%, rgba(147, 51, 234, 0.15), transparent 70%) !important;
+        }
+
+        body.halloween-mode nav {
+            background-color: #120d26 !important;
+            border-bottom: 1px solid rgba(192, 132, 252, 0.3) !important;
+        }
+
+        body.halloween-mode .bg-slate-900 {
+            background-color: #120a2a !important;
+            border: 1px solid rgba(192, 132, 252, 0.3) !important;
+        }
+
+        body.halloween-mode .bg-blue-600, 
+        body.halloween-mode button:not(.bg-slate-800):not(.bg-slate-950):not(#acc-toggle-btn) {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.5) !important;
+            border: 1px solid #fb923c !important;
+        }
+
+        body.halloween-mode .text-blue-500, body.halloween-mode .text-blue-600, body.halloween-mode .text-blue-400 {
+            color: #c084fc !important;
+        }
+    </style>
 </head>
 <body class="bg-slate-950 font-sans text-slate-100 min-h-screen">
 
-    <!-- Barra de Navegación Responsiva con Menú Hamburguesa Integrado -->
     <nav class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 text-slate-100">
         <div class="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
             <a href="/" class="text-xl md:text-2xl font-black text-blue-500 tracking-tight flex items-center gap-2">
@@ -20,14 +137,12 @@
                 <span>ZapaShop</span>
             </a>
 
-            <!-- Enlaces de Escritorio -->
             <div class="hidden md:flex gap-8 font-bold text-sm text-slate-300">
                 <a href="/" class="hover:text-blue-400 transition-colors">Inicio</a>
                 <a href="/catalogo" class="hover:text-blue-400 transition-colors">Catálogo</a>
                 <a href="/carrito" class="hover:text-blue-400 transition-colors">Carrito</a>
             </div>
 
-            <!-- Acciones Derecha -->
             <div class="flex items-center gap-3">
                 <a href="/carrito" class="relative group p-2 text-slate-300 hover:text-white">
                     <i data-lucide="shopping-cart" class="w-6 h-6"></i>
@@ -39,7 +154,6 @@
             </div>
         </div>
 
-        <!-- Menú Desplegable Móvil -->
         <div id="menuMovilDesplegable" class="hidden md:hidden bg-slate-950 border-t border-slate-800 px-6 py-5 space-y-4 font-bold text-sm text-slate-300 shadow-2xl">
             <a href="/" class="block hover:text-blue-400 py-1 border-b border-slate-900">🏠 Inicio</a>
             <a href="/catalogo" class="block hover:text-blue-400 py-1 border-b border-slate-900">👟 Catálogo</a>
@@ -50,14 +164,12 @@
 
     <main class="max-w-4xl mx-auto py-12 px-4">
         
-        <!-- SECCIÓN FORMULARIOS (NO LOGUEADO) -->
         <div id="seccionAuth" class="max-w-md mx-auto bg-slate-900 p-8 rounded-[2.5rem] shadow-2xl border border-slate-800">
             <div class="flex bg-slate-950 p-1.5 rounded-2xl mb-8 border border-slate-800">
                 <button id="btnTabLogin" class="flex-1 py-3 rounded-xl font-black text-xs transition-all bg-blue-600 text-white shadow-lg cursor-pointer">Entrar</button>
                 <button id="btnTabRegistro" class="flex-1 py-3 rounded-xl font-bold text-xs transition-all text-slate-400 hover:text-white cursor-pointer">Registrarme</button>
             </div>
 
-            <!-- Formulario Registro -->
             <form id="formRegistro" class="hidden space-y-4">
                 <h2 class="text-2xl font-black text-white mb-2">Crea tu cuenta</h2>
                 <div>
@@ -77,7 +189,6 @@
                 </button>
             </form>
 
-            <!-- Formulario Login -->
             <form id="formLogin" class="space-y-4">
                 <h2 class="text-2xl font-black text-white mb-2">¡Hola de nuevo!</h2>
                 <div>
@@ -94,9 +205,7 @@
             </form>
         </div>
 
-        <!-- SECCIÓN PERFIL E HISTORIAL (USUARIO LOGUEADO) -->
         <div id="seccionUsuarioLogueado" class="hidden space-y-8">
-            <!-- Tarjeta Saludo -->
             <div class="bg-gradient-to-r from-slate-900 to-blue-950 p-8 rounded-[2.5rem] text-white shadow-2xl border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-6">
                 <div class="flex items-center gap-4">
                     <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-600/40">
@@ -117,14 +226,13 @@
                 </div>
             </div>
 
-            <!-- Contenedor Historial de Pedidos -->
             <div class="bg-slate-900 p-8 rounded-[2.5rem] border border-slate-800 shadow-2xl">
                 <h3 class="text-xl font-black text-white mb-6 flex items-center gap-3">
                     <i data-lucide="package-check" class="w-6 h-6 text-blue-400"></i>
                     Historial de Compras y Pedidos
                 </h3>
                 <div id="contenedorHistorialPedidos" class="space-y-4">
-                    <!-- Se llena dinámicamente con app.js -->
+                    <!-- Historial dinámico -->
                 </div>
             </div>
         </div>
@@ -142,6 +250,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof verificarEstadoSesion === 'function') verificarEstadoSesion();
+            if (typeof gestionarPermisosUI === 'function') gestionarPermisosUI();
             if (window.lucide) lucide.createIcons();
         });
     </script>
