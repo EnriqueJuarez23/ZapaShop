@@ -2,6 +2,9 @@ import { Controller, Get, Render, Post, Body, Query, Param, Delete } from '@nest
 import * as fs from 'fs';
 import * as path from 'path';
 
+// 1. Variable global en la memoria del servidor de Render para el modo Halloween
+let halloweenGlobal = false;
+
 @Controller()
 export class AppController {
   // 1. Definimos la ruta del archivo donde se guardará todo
@@ -63,17 +66,15 @@ export class AppController {
     return { message: 'ok' };
   }
 
-@Post('api/zapatos/vender')
+  @Post('api/zapatos/vender')
   venderZapatos(@Body() body: { items: any[] }) {
     const zapatos = this.leerBaseDeDatos();
     const itemsVendidos = body.items;
 
     itemsVendidos.forEach(itemComprado => {
-      // Buscamos el zapato en nuestra "base de datos" (el JSON)
       const index = zapatos.findIndex(z => z.id === Number(itemComprado.id));
       
       if (index !== -1) {
-        // Restamos 1 al stock (o la cantidad que gustes)
         const stockActual = Number(zapatos[index].stock) || 0;
         if (stockActual > 0) {
           zapatos[index].stock = stockActual - 1;
@@ -81,7 +82,7 @@ export class AppController {
       }
     });
 
-    this.guardarBaseDeDatos(zapatos); // Guardamos el nuevo stock en el archivo
+    this.guardarBaseDeDatos(zapatos);
     return { message: 'Stock actualizado correctamente' };
   }
 
@@ -100,7 +101,7 @@ export class AppController {
     const index = zapatos.findIndex(z => z.id === Number(id));
     if (index !== -1) {
       zapatos[index] = { ...zapatos[index], ...datos };
-      this.guardarBaseDeDatos(zapatos); // Guardamos el cambio
+      this.guardarBaseDeDatos(zapatos);
       return { message: 'Actualizado' };
     }
   }
@@ -109,8 +110,23 @@ export class AppController {
   deleteZapato(@Param('id') id: string) {
     let zapatos = this.leerBaseDeDatos();
     zapatos = zapatos.filter(z => z.id !== Number(id));
-    this.guardarBaseDeDatos(zapatos); // Guardamos después de borrar
+    this.guardarBaseDeDatos(zapatos);
     return { message: 'Borrado' };
+  }
+
+  // =====================================================================
+  // NUEVOS ENDPOINTS PARA LA CONFIGURACIÓN GLOBAL DE HALLOWEEN EN TIEMPO REAL
+  // =====================================================================
+
+  @Get('api/config/halloween')
+  getHalloweenStatus() {
+    return { halloween: halloweenGlobal };
+  }
+
+  @Post('api/config/halloween')
+  setHalloweenStatus(@Body() body: { activo: boolean }) {
+    halloweenGlobal = body.activo;
+    return { success: true, halloween: halloweenGlobal };
   }
 
   @Get('catalogo') @Render('catalogo') getCatalogo() { return {}; }

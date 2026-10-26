@@ -1247,25 +1247,37 @@ document.addEventListener("DOMContentLoaded", () => {
 // =======================================================
 // --- CONTROL ADMINISTRABLE DE TEMÁTICA HALLOWEEN ---
 // =======================================================
+async function toggleHalloweenAdmin() {
+    const btn = document.getElementById('btnSwitchHalloween');
+    if (!btn) return;
 
-function toggleHalloweenAdmin() {
-    const estadoActual = localStorage.getItem('zapa_halloween_global') === 'true';
-    const nuevoEstado = !estadoActual;
+    // Verificamos de forma segura si el botón actualmente contiene la palabra DESACTIVADO
+    const estaDesactivado = btn.innerText.includes("DESACTIVADO");
+    const nuevoEstado = estaDesactivado; // Si está desactivado, el nuevo estado será true (activar)
     
-    localStorage.setItem('zapa_halloween_global', nuevoEstado);
-    aplicarTemaHalloween(nuevoEstado);
-    actualizarBotonAdminHalloween(nuevoEstado);
-
-    if (typeof Swal !== 'undefined') {
-        Swal.fire({
-            title: nuevoEstado ? '🎃 ¡Halloween Activado!' : '✨ Tema Clásico Restaurado',
-            text: nuevoEstado ? 'La tienda completa ahora luce la versión de temporada.' : 'Se ha restablecido la apariencia estándar de ZapaShop.',
-            icon: nuevoEstado ? 'warning' : 'info',
-            timer: 2000,
-            showConfirmButton: false,
-            toast: true,
-            position: 'top-end'
+    try {
+        await fetch('/api/config/halloween', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ activo: nuevoEstado })
         });
+
+        aplicarTemaHalloween(nuevoEstado);
+        actualizarBotonAdminHalloween(nuevoEstado);
+
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: nuevoEstado ? '🎃 ¡Halloween Activado!' : '✨ Tema Clásico Restaurado',
+                text: nuevoEstado ? 'La tienda ha cambiado para todos los dispositivos.' : 'Se ha restablecido la apariencia estándar.',
+                icon: nuevoEstado ? 'warning' : 'info',
+                timer: 2000,
+                showConfirmButton: false,
+                toast: true,
+                position: 'top-end'
+            });
+        }
+    } catch (e) {
+        console.error("Error al sincronizar con el servidor", e);
     }
 }
 
@@ -1279,21 +1291,41 @@ function aplicarTemaHalloween(activo) {
 
 function actualizarBotonAdminHalloween(activo) {
     const btn = document.getElementById('btnSwitchHalloween');
-    const txt = document.getElementById('statusHalloweenText');
-    if (!btn || !txt) return;
+    if (!btn) return;
 
     if (activo) {
         btn.className = "px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all duration-300 flex items-center gap-2 cursor-pointer bg-orange-600 text-white shadow-lg shadow-orange-600/30";
-        txt.innerText = "ACTIVADO 🎃";
+        btn.innerHTML = "🎃 MODO HALLOWEEN: ACTIVADO";
     } else {
         btn.className = "px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all duration-300 flex items-center gap-2 cursor-pointer bg-slate-100 text-slate-600 hover:bg-orange-500 hover:text-white shadow-sm";
-        txt.innerText = "DESACTIVADO";
+        btn.innerHTML = "🎃 MODO HALLOWEEN: DESACTIVADO";
     }
 }
 
 // Verificar el estado de la temática al cargar cualquier página
-document.addEventListener('DOMContentLoaded', () => {
-    const estaActivado = localStorage.getItem('zapa_halloween_global') === 'true';
-    aplicarTemaHalloween(estaActivado);
-    actualizarBotonAdminHalloween(estaActivado);
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const respuesta = await fetch('/api/config/halloween');
+        const datos = await respuesta.json();
+        
+        aplicarTemaHalloween(datos.halloween);
+        actualizarBotonAdminHalloween(datos.halloween);
+    } catch (e) {
+        console.error("No se pudo obtener el estado de Halloween del servidor", e);
+    }
 });
+
+// Opcional: Polling en tiempo real cada 4 segundos para que los celulares u otras pestañas cambien solos sin recargar
+setInterval(async () => {
+    try {
+        const res = await fetch('/api/config/halloween');
+        const data = await res.json();
+        
+        const estaActivoLocal = document.body.classList.contains('halloween-mode');
+        if (data.halloween !== estaActivoLocal) {
+            aplicarTemaHalloween(data.halloween);
+            actualizarBotonAdminHalloween(data.halloween);
+        }
+    } catch (e) {}
+}, 4000);
