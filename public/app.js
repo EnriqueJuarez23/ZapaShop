@@ -579,65 +579,73 @@ function prepararEdicion(id, nombre, precio, categoria, img, stock) {
 }
 
 // Registro y Login
+
 const formRegistro = document.getElementById('formRegistro');
 if (formRegistro) {
-    formRegistro.addEventListener('submit', (e) => {
+    formRegistro.addEventListener('submit', async (e) => {
         e.preventDefault();
         const nombre = document.getElementById('regNombre').value.trim();
         const email = document.getElementById('regEmail').value.trim().toLowerCase();
-        const pass = document.getElementById('regPass').value;
+        const password = document.getElementById('regPass').value;
 
-        let usuarios = JSON.parse(localStorage.getItem('zapa_usuarios')) || [];
-        if (usuarios.some(u => u.email === email)) {
-            if (typeof Swal !== 'undefined') {
-                Swal.fire({ title: 'Correo ya registrado', text: 'Inicia sesión con tus credenciales.', icon: 'info', confirmButtonColor: '#0f172a' });
+        try {
+            const res = await fetch('/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nombre, email, password })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({ title: '¡Cuenta creada!', text: 'Ya puedes iniciar sesión.', icon: 'success', confirmButtonColor: '#0f172a' }).then(() => window.location.reload());
+                } else {
+                    alert('Cuenta creada con éxito.');
+                    window.location.reload();
+                }
             } else {
-                alert('Este correo ya está registrado.');
+                alert(data.message);
             }
-            return;
-        }
-        usuarios.push({ nombre, email, pass });
-        localStorage.setItem('zapa_usuarios', JSON.stringify(usuarios));
-        if (typeof Swal !== 'undefined') {
-            Swal.fire({ title: '¡Cuenta creada!', text: 'Ya puedes iniciar sesión.', icon: 'success', confirmButtonColor: '#0f172a' }).then(() => window.location.reload());
-        } else {
-            alert('¡Cuenta creada! Ya puedes iniciar sesión.');
-            window.location.reload();
+        } catch (err) {
+            console.error("Error en registro:", err);
         }
     });
 }
 
 const formLogin = document.getElementById('formLogin');
 if (formLogin) {
-    formLogin.addEventListener('submit', (e) => {
+    formLogin.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const identificador = document.getElementById('loginUser').value.trim().toLowerCase();
-        const pass = document.getElementById('loginPass').value;
+        const email = document.getElementById('loginUser').value.trim().toLowerCase();
+        const password = document.getElementById('loginPass').value;
 
-        if (identificador.endsWith('@zapashop.com')) {
-            localStorage.setItem('usuario_logueado', JSON.stringify({ nombre: 'Administrador', email: identificador }));
-            // Limpiar historial de chat al iniciar sesión de admin para asegurar privacidad
-            localStorage.removeItem('zapa_chat_historial_mensajes');
-            localStorage.removeItem('zapa_chat_estado');
-            window.location.href = "/admin";
-            return;
-        }
+        try {
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
 
-        let usuarios = JSON.parse(localStorage.getItem('zapa_usuarios')) || [];
-        const userFound = usuarios.find(u => (u.email === identificador || u.nombre.toLowerCase() === identificador) && u.pass === pass);
-
-        if (userFound) {
-            localStorage.setItem('usuario_logueado', JSON.stringify({ nombre: userFound.nombre, email: userFound.email }));
-            // Limpiar historial de chat al cambiar de cuenta exitosamente
-            localStorage.removeItem('zapa_chat_historial_mensajes');
-            localStorage.removeItem('zapa_chat_estado');
-            window.location.href = '/perfil';
-        } else {
-            if (typeof Swal !== 'undefined') {
-                Swal.fire({ title: 'Datos incorrectos', text: 'Verifica tu usuario o contraseña.', icon: 'error', confirmButtonColor: '#0f172a' });
+            if (data.success) {
+                // Guardamos la sesión del usuario que SÍ existe en el servidor
+                localStorage.setItem('usuario_logueado', JSON.stringify(data.usuario));
+                
+                // Si es administrador real, lo mandamos al panel
+                if (data.usuario.email.endsWith('@zapashop.com')) {
+                    window.location.href = '/admin';
+                } else {
+                    window.location.href = '/perfil';
+                }
             } else {
-                alert('Usuario o contraseña incorrectos.');
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({ title: 'Datos incorrectos', text: data.message, icon: 'error', confirmButtonColor: '#0f172a' });
+                } else {
+                    alert(data.message);
+                }
             }
+        } catch (err) {
+            console.error("Error en login:", err);
         }
     });
 }
@@ -698,7 +706,7 @@ function cerrarSesion() {
 }
 
 // =======================================================
-// --- CHATBOT AVANZADO CON INACTIVIDAD Y AGENTE ALEATORIO ---
+// --- CHATBOT AVANZADO Y RESPONSIVO ---
 // =======================================================
 
 let timerInactividad = null;
@@ -728,7 +736,7 @@ function obtenerClaveHistorialChat() {
     return `zapa_chat_historial_${identificador}`;
 }
 
-// Reiniciar temporizador de inactividad (2 minutos = 120,000 ms)
+// Ampliamos el tiempo de inactividad a 5 minutos (300,000 ms) para que no bote al usuario rápidamente
 function reiniciarTimerInactividad() {
     if (timerInactividad) clearTimeout(timerInactividad);
 
@@ -738,33 +746,24 @@ function reiniciarTimerInactividad() {
             const chatMessages = document.getElementById('chat-messages');
             if (chatMessages) {
                 const div = document.createElement('div');
-                div.className = 'p-3 max-w-[85%] text-xs bg-rose-950/80 text-rose-200 border border-rose-800/80 rounded-2xl self-start my-2';
-                div.innerHTML = '<b>ZapaShop Bot:</b> ⏱️ <i>Sesión finalizada por inactividad. Limpiando conversación...</i>';
+                div.className = 'p-3 max-w-[85%] text-xs bg-slate-800 text-slate-300 border border-slate-700 rounded-2xl self-start my-2';
+                div.innerHTML = '<b>ZapaShop Bot:</b> ⏱️ <i>¿Sigues por ahí? La conversación sigue abierta por si necesitas más ayuda.</i>';
                 chatMessages.appendChild(div);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
-
-            setTimeout(() => {
-                limpiarConversacionChatSilencioso();
-            }, 2500);
         }
-    }, 120000); // 2 minutos
+    }, 300000); // 5 minutos de margen generoso
 }
 
-// REINICIO COMPLETO Y RECTIFICACIÓN DEL CHAT (EN TIEMPO REAL)
 window.limpiarConversacionChat = function() {
-    // 1. Borrar registros de almacenamiento local
     const claveStorage = obtenerClaveHistorialChat();
     localStorage.removeItem(claveStorage);
     localStorage.removeItem('zapa_chat_estado');
     estadoChat = { flujoActual: null, ultimoPedidoConsultado: null, datosTemp: {} };
 
-    // 2. Limpiar el contenedor de mensajes del DOM
     const chatMessages = document.getElementById('chat-messages');
     if (chatMessages) {
         chatMessages.innerHTML = '';
-
-        // 3. Volver a renderizar el mensaje de bienvenida unificado
         const rawUser = localStorage.getItem('usuario_logueado');
         const userObj = rawUser ? JSON.parse(rawUser) : null;
 
@@ -777,7 +776,6 @@ window.limpiarConversacionChat = function() {
         div.innerHTML = `<b>ZapaShop Bot:</b> ${saludoInicial}`;
         chatMessages.appendChild(div);
 
-        // Guardar el saludo en el nuevo historial
         const nuevoHistorial = [{
             remitente: 'ZapaShop Bot',
             mensaje: saludoInicial,
@@ -785,15 +783,11 @@ window.limpiarConversacionChat = function() {
         }];
         localStorage.setItem(claveStorage, JSON.stringify(nuevoHistorial));
     }
-
-    // 4. Reiniciar el temporizador de inactividad
     reiniciarTimerInactividad();
 };
 
 function limpiarConversacionChatSilencioso() {
     window.limpiarConversacionChat();
-
-    // Cerrar la ventana flotante suavemente
     const chatWindow = document.getElementById('chat-window');
     if (chatWindow) {
         chatWindow.classList.remove('scale-100', 'opacity-100');
@@ -803,7 +797,9 @@ function limpiarConversacionChatSilencioso() {
     }
 }
 
-// LÓGICA CONVERSACIONAL INTELIGENTE
+// LÓGICA CONVERSACIONAL FLEXIBLE Y RESPONSIVA
+
+// LÓGICA CONVERSACIONAL RESPONSIVA Y GUIADA
 function procesarFlujoConversacional(query, zapatos = []) {
     const rawInput = query.trim();
     const q = rawInput.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -814,40 +810,136 @@ function procesarFlujoConversacional(query, zapatos = []) {
 
     const esFormatoPedido = q.startsWith('ord-') || /^\d{5,8}$/.test(q);
 
-    // 0. AGRADECIMIENTOS, DESPEDIDAS Y CIERRE DE SESIÓN
-    if (q.includes('gracias') || q.includes('muchas gracias') || q.includes('de nada') || q.includes('ok') || q.includes('perfecto') || q.includes('adios') || q.includes('hasta luego')) {
+    // 0. AGRADECIMIENTOS (Solo cortesía, mantiene el chat abierto)
+    if (q.includes('gracias') || q.includes('muchas gracias') || q.includes('perfecto') || q.includes('excelente')) {
+        return `🤖 <b>Asistente ZapaShop:</b><br><br>¡De nada! Es un placer ayudarte. 👟✨ ¿Hay algo más en lo que te pueda apoyar el día de hoy?`;
+    }
+
+    // 0.1 DESPEDIDAS Y CIERRE AUTOMÁTICO
+    if (q.includes('adios') || q.includes('hasta luego') || q.includes('nos vemos') || q.includes('terminamos') || q.includes('ninguna otra duda') || q.includes('bye')) {
         setTimeout(() => {
             limpiarConversacionChatSilencioso();
-        }, 4000);
+        }, 3500);
 
         return `🤖 <b>Asistente ZapaShop:</b><br><br>
-        ¡A ti por escribirnos! Fue un placer ayudarte el día de hoy. 👟✨<br><br>
+        ¡Fue un placer atenderte! 👟✨<br><br>
         🟢 <b>Conversación Finalizada.</b><br>
-        <i>Limpiando la sesión y cerrando ventana... ¡Que tengas excelente día!</i>`;
+        <i>Cerrando el chat y limpiando sesión... ¡Que tengas un excelente día!</i>`;
     }
 
-    // 1. SOLICITUD DE ATENCIÓN HUMANA / ASESOR ALEATORIO DE ADMIN
-    if (
-        q.includes('agente') || q.includes('persona') || q.includes('humano') || 
-        q.includes('llamada') || q.includes('llamar') || q.includes('asesor') || 
-        q.includes('soporte') || q.includes('telefono') || q.includes('contacto') || q.includes('admin')
-    ) {
-        // Seleccionar asesor de forma aleatoria de la lista de 5 empleados
+    // =========================================================================
+    // 1. FLUJO RESPONSIVO PASO A PASO: CAMBIOS Y REEMBOLSOS
+    // =========================================================================
+
+    // PASO 1: Detectar intención inicial de Cambio o Reembolso
+    if (q.includes('rembolso') || q.includes('reembolso') || q.includes('devolucion') || q.includes('cambio') || q.includes('garantia')) {
+        estadoChat.flujoActual = 'cambio_paso_1_motivo';
+        guardarEstadoChat();
+
+        return `🔄 <b>Gestión de Cambios y Garantías:</b><br><br>
+        Cuentas con <b>30 días naturales</b> para solicitar un cambio o reembolso sin costo adicional.<br><br>
+        Para guiarte paso a paso, **¿cuál es el motivo principal?**<br><br>
+        1️⃣ <i>"Talla incorrecta"</i><br>
+        2️⃣ <i>"Defecto o producto dañado"</i><br>`;
+    }
+
+    // PASO 2: Procesar la opción elegida por el usuario
+    if (estadoChat.flujoActual === 'cambio_paso_1_motivo') {
+
+        if (q.includes('talla') || q.includes('1') || q.includes('numero') || q.includes('chico') || q.includes('grande')) {
+            estadoChat.flujoActual = 'cambio_paso_2_sucursal';
+            guardarEstadoChat();
+
+            return `📏 <b>Cambio por Talla:</b><br><br>
+            ¡Entendido! Puedes realizar el cambio directamente en tienda física o mediante envío.<br><br>
+            <b>¿Cómo prefieres realizarlo?</b><br>
+            • Escribe <b>"Sucursal"</b> para ver la tienda más cercana.<br>
+            • Escribe <b>"Envio"</b> para generar una guía de paquetería.`;
+        }
+
+        if (q.includes('defecto') || q.includes('2') || q.includes('danado') || q.includes('roto') || q.includes('mal estado')) {
+            estadoChat.flujoActual = null;
+            guardarEstadoChat();
+
+            return `⚠️ <b>Garantía por Defecto de Fábrica:</b><br><br>
+            Lamentamos el inconveniente. Tu compra incluye reemplazo inmediato.<br><br>
+            👉 Te conectamos con un asesor para validar tus fotos e iniciar la reposición:<br>
+            🎧 <a href="https://wa.me/525540304692?text=Hola,%20requiero%20garantia%20por%20defecto%20de%20fabrica" target="_blank" class="text-fuchsia-400 font-bold underline">Contactar a Soporte por WhatsApp</a>`;
+        }
+
+        if (q.includes('reembolso') || q.includes('devolucion') || q.includes('3') || q.includes('dinero') || q.includes('regreso')) {
+            estadoChat.flujoActual = 'cambio_paso_2_reembolso';
+            guardarEstadoChat();
+
+            return `💰 <b>Solicitud de Reembolso:</b><br><br>
+            Los reembolsos se procesan al mismo método de pago en 24 a 72 horas hábiles.<br><br>
+            👉 Por favor escribe tu <b>Código de Pedido</b> (Ejemplo: <code>ORD-937673</code>) para iniciar la solicitud de reembolso:`;
+        }
+    }
+
+    // PASO 3: Continuación según la opción elegida en Paso 2
+    if (estadoChat.flujoActual === 'cambio_paso_2_sucursal') {
+        estadoChat.flujoActual = null;
+        guardarEstadoChat();
+
+        if (q.includes('sucursal') || q.includes('tienda') || q.includes('fisica')) {
+            return `📍 <b>Cambio en Sucursal Física:</b><br><br>
+            Acude a cualquiera de nuestras tiendas con tu calzado en caja original y tu número de pedido:<br><br>
+            🏢 <b>Sucursal Centro:</b> Av. Juárez #89 (Metro Hidalgo)<br>
+            🏢 <b>Sucursal Iztapalapa:</b> Av. Ermita Iztapalapa #1234<br>
+            🏢 <b>Sucursal Coapa:</b> Calzada del Hueso #567<br><br>
+            🕒 Horario: Lunes a Domingo de 10:00 AM a 8:00 PM. El cambio de talla es inmediato en caja.`;
+        } else {
+            return `🚚 <b>Cambio mediante Paquetería:</b><br><br>
+            Te enviaremos una guía pre-pagada a tu correo.<br>
+            👉 Contacta a un asesor para solicitar la etiqueta de envío:<br>
+            🎧 <a href="https://wa.me/525540304692?text=Hola,%20requiero%20una%20guia%20para%20cambio%20de%20talla" target="_blank" class="text-fuchsia-400 font-bold underline">Solicitar Guía en WhatsApp</a>`;
+        }
+    }
+
+    if (estadoChat.flujoActual === 'cambio_paso_2_reembolso') {
+        const pedidoEncontrado = historialPedidos.find(p => 
+            p.id.toUpperCase() === rawInput.toUpperCase() || 
+            p.id.replace('ORD-', '').toUpperCase() === rawInput.toUpperCase()
+        );
+
+        estadoChat.flujoActual = null;
+        guardarEstadoChat();
+
+        if (pedidoEncontrado) {
+            return `✅ <b>Solicitud de Reembolso Registrada:</b><br><br>
+            • <b>Pedido:</b> ${pedidoEncontrado.id}<br>
+            • <b>Monto a devolver:</b> ${pedidoEncontrado.total}<br>
+            • <b>Método:</b> ${pedidoEncontrado.metodoPago || 'Transferencia'}<br><br>
+            Un asesor procesará el depósito en las próximas 24 horas a tu cuenta.`;
+        } else {
+            return `❌ No encontramos la orden <b>"${rawInput}"</b>.<br><br>
+            Por favor verifica tu código en la sección de **Mis Pedidos** de tu perfil e inténtalo nuevamente.`;
+        }
+    }
+
+    // =========================================================================
+    // OTROS OTROS ENDPOINTS Y RESPUESTAS
+    // =========================================================================
+
+    // Atender solicitudes humanas / asesor
+    if (q.includes('agente') || q.includes('persona') || q.includes('humano') || q.includes('asesor') || q.includes('soporte')) {
         const asesorAleatorio = LISTA_ASESORES[Math.floor(Math.random() * LISTA_ASESORES.length)];
-
-        return `🎧 <b>Transferencia a Atención Humana ZapaShop:</b><br><br>
-        Te hemos conectado con nuestro ejecutivo de soporte:<br>
-        👤 <b>${asesorAleatorio.nombre}</b><br>
-        🏷️ <i>${asesorAleatorio.rol}</i><br><br>
-        • 🟢 <b>Estatus:</b> Disponible en línea<br>
-        • 💬 <b>WhatsApp Directo:</b> <a href="https://wa.me/525540304692?text=Hola%20${encodeURIComponent(asesorAleatorio.nombre)},%20necesito%20atencion%20personalizada" target="_blank" class="text-fuchsia-400 font-black underline">Contactar a ${asesorAleatorio.nombre.split(' ')[0]}</a><br>
-        • 📞 <b>Teléfono:</b> <a href="tel:5540304692" class="text-blue-400 font-bold underline">55-4030-4692</a><br><br>
-        <i>En un momento ${asesorAleatorio.nombre.split(' ')[0]} responderá a tu llamado.</i>`;
+        return `🎧 <b>Atención Humana ZapaShop:</b><br><br>
+        Te hemos enlazado con nuestro especialista:<br>
+        👤 <b>${asesorAleatorio.nombre}</b> (${asesorAleatorio.rol})<br><br>
+        💬 <a href="https://wa.me/525540304692?text=Hola%20${encodeURIComponent(asesorAleatorio.nombre)},%20necesito%20asistencia" target="_blank" class="text-fuchsia-400 font-black underline">Contactar por WhatsApp</a>`;
     }
 
-    // 2. SOLICITUD DE VER PEDIDOS
-    const solicitaPedido = q.includes('pedido') || q.includes('orden') || q.includes('mis compras') || q.includes('rastrear');
+    // Problemas de sesión
+    if (q.includes('sesion') || q.includes('iniciar') || q.includes('entrar') || q.includes('cuenta') || q.includes('login')) {
+        return `🔐 <b>Ayuda con tu Cuenta:</b><br><br>
+        • Verifica correo y contraseña registrados.<br>
+        • Si eres Administrador, recuerda usar tu cuenta con dominio <code>@zapashop.com</code>.`;
+    }
 
+    // Rastrear pedidos
+    const solicitaPedido = q.includes('pedido') || q.includes('orden') || q.includes('mis compras') || q.includes('rastrear');
     if (solicitaPedido) {
         estadoChat.flujoActual = 'esperando_numero_pedido';
         guardarEstadoChat();
@@ -859,135 +951,56 @@ function procesarFlujoConversacional(query, zapatos = []) {
                 estadoChat.ultimoPedidoConsultado = ultimo;
                 guardarEstadoChat();
 
-                const badgeColor = ultimo.estado === 'Completado' ? 'text-emerald-400' : (ultimo.estado === 'Cancelado' ? 'text-rose-400' : 'text-blue-400');
-
-                return `📦 <b>¡Hola ${userObj.nombre}! Tus compras:</b><br><br>
-                Tu pedido más reciente es el <b>${ultimo.id}</b> con estatus: <b class="${badgeColor}">${ultimo.estado}</b>.<br><br>
-                • Escribe <b>"${ultimo.id}"</b> para ver el detalle.<br>
-                • O ingresa cualquier otro código de orden.`;
+                return `📦 <b>Tus Pedidos recientes:</b><br><br>
+                Tu última compra es la <b>${ultimo.id}</b> (${ultimo.total}) - Estatus: <b class="text-blue-400">${ultimo.estado}</b>.<br><br>
+                👉 Escribe <b>"${ultimo.id}"</b> para ver los detalles.`;
             }
         }
-
-        return `📦 <b>Atención de Pedidos ZapaShop:</b><br><br>
-        👉 <b>Ingresa tu ID de Pedido (Ej. <code>ORD-937673</code>)</b>:`;
+        return `📦 <b>Rastreo de Pedidos:</b><br><br>👉 Ingresa tu código de orden (Ej. <code>ORD-937673</code>):`;
     }
 
-    // 3. CONSULTA POR ID ESPECÍFICO DE PEDIDO
-    if (estadoChat.flujoActual === 'esperando_numero_pedido' || esFormatoPedido) {
-        const pedidoEncontrado = historialPedidos.find(p => 
-            p.id.toUpperCase() === rawInput.toUpperCase() || 
-            p.id.replace('ORD-', '').toUpperCase() === rawInput.toUpperCase() ||
-            (p.nombreCliente && p.nombreCliente.toLowerCase() === q) ||
-            (p.email && p.email.toLowerCase() === q) ||
-            (p.emailUsuario && p.emailUsuario.toLowerCase() === q)
-        );
-
-        estadoChat.flujoActual = null;
-
-        if (pedidoEncontrado) {
-            estadoChat.ultimoPedidoConsultado = pedidoEncontrado;
-            guardarEstadoChat();
-
-            const badgeColor = pedidoEncontrado.estado === 'Completado' ? 'text-emerald-400' : (pedidoEncontrado.estado === 'Cancelado' ? 'text-rose-400' : 'text-blue-400');
-            return `🔎 <b>Pedido Encontrado (${pedidoEncontrado.id}):</b><br><br>
-            • <b>Cliente:</b> ${pedidoEncontrado.nombreCliente || 'Cliente'}<br>
-            • <b>Estatus Actual:</b> <span class="${badgeColor} font-black">${pedidoEncontrado.estado}</span><br>
-            • <b>Dirección de Entrega:</b> ${pedidoEncontrado.direccion || 'Estándar'}<br>
-            • <b>Monto Total:</b> $${pedidoEncontrado.total || '0.00'}<br><br>
-            💡 <i>Pregúntame: "¿Por qué no llega?" o "Hablar con un asesor".</i>`;
-        } else {
-            guardarEstadoChat();
-            return `❌ No encontré ningún pedido asociado a <b>"${rawInput}"</b>.<br><br>
-            Verifica el código en tu perfil e inténtalo nuevamente.`;
-        }
-    }
-
-    // 4. EXPLICACIÓN SEGÚN ESTATUS DEL PEDIDO
-    if (q.includes('no llega') || q.includes('porque no llega') || q.includes('demora') || q.includes('retraso') || q.includes('estatus') || q.includes('donde esta')) {
-        if (estadoChat.ultimoPedidoConsultado) {
-            const p = estadoChat.ultimoPedidoConsultado;
-            const estadoActual = p.estado || 'En Preparación';
-
-            switch (estadoActual) {
-                case 'En Preparación':
-                    return `🟡 <b>Estatus: En Preparación</b><br><br>Tu orden está en empaquetado en almacén.<br>• <b>Siguiente paso:</b> En menos de 24h pasará a paquetería para envío a <b>${p.direccion}</b>.`;
-
-                case 'En Ruta':
-                    return `🚚 <b>Estatus: En Ruta de Entrega</b><br><br>Tu paquete ya viaja en el camión de reparto.<br>• <b>Destino:</b> ${p.direccion}<br>• <b>Tiempo estimado:</b> 24 a 48 horas hábiles.`;
-
-                case 'Listo en Sucursal':
-                    return `🏢 <b>Estatus: Listo en Sucursal</b><br><br>Tus tenis te esperan en mostrador.<br>• Acude con tu ID de pedido <b>${p.id}</b> e identificación oficial.`;
-
-                case 'Completado':
-                    return `🟢 <b>Estatus: Pedido Completado</b><br><br>Este pedido fue entregado con éxito. Cuentas con <b>30 días de garantía</b> para cualquier cambio o devolución.`;
-
-                case 'Cancelado':
-                    return `🔴 <b>Estatus: Pedido Cancelado</b><br><br>El pedido <b>${p.id}</b> fue cancelado por falta de stock o validación del pago.<br>• Si se realizó el cobro, tu reembolso se procesará de 24 a 72 horas automáticamente.`;
-
-                default:
-                    return `📦 Tu paquete <b>${p.id}</b> está en proceso.`;
-            }
-        } else {
-            estadoChat.flujoActual = 'esperando_numero_pedido';
-            guardarEstadoChat();
-            return `🚚 Con gusto reviso la situación.<br><br>👉 <b>Escribe tu ID de Pedido (Ej. <code>ORD-937673</code>)</b>:`;
-        }
-    }
-
-    // 5. ENVÍOS Y TALLAS (CON LINK A CATÁLOGO)
-    if (q.includes('envio') || q.includes('costo') || q.includes('cuanto cuesta')) {
-        return `🚚 <b>Información de Envíos:</b><br><br>• ¡Gratis en compras mayores a $999 MXN!<br>• Envío estándar: $99 MXN.<br>• Tiempo: 2 a 4 días hábiles a todo México.`;
-    }
-
-    if (q.includes('talla') || q.includes('tallas') || q.includes('medida')) {
-        return `👟 <b>Tallas Disponibles:</b><br><br>Manejamos números del <b>25 al 29 MXN</b>.<br>👉 Revisa el stock por modelo en nuestro <a href="/catalogo" class="text-fuchsia-400 underline font-bold">Catálogo ZapaShop</a>.`;
-    }
-
-    // 6. CAMBIOS Y REEMBOLSOS
-    if (q.includes('rembolso') || q.includes('reembolso') || q.includes('devolucion') || q.includes('cambio')) {
-        estadoChat.flujoActual = 'esperando_sucursal';
-        guardarEstadoChat();
-
-        return `💳 <b>Cambios y Reembolsos:</b><br><br>Cuentas con <b>30 días naturales de garantía</b>.<br><br>👉 <b>Escribe tu alcaldía o zona</b> para sugerirte la sucursal más cercana:`;
-    }
-
-    if (estadoChat.flujoActual === 'esperando_sucursal') {
-        estadoChat.flujoActual = null;
-        guardarEstadoChat();
-
-        return `📍 <b>Ubicación Sugerida para "${rawInput}":</b><br><br>
-        🏢 <b>Sucursal Centro:</b> Av. Juárez #89 (Metro Hidalgo)<br>
-        🕒 Horario: Lunes a Domingo 10:00 AM - 8:00 PM.<br>
-        <i>Presenta tu ID de compra en caja para validar tu garantía en 5 minutos.</i>`;
-    }
-
-// -------------------------------------------------------------
-    // CONSULTAS DE CATÁLOGO, MODELOS Y TIENDAS FÍSICAS
-    // -------------------------------------------------------------
-
-    // A) CATÁLOGO Y MODELOS DE ZAPATOS
-    if (q.includes('catalogo') || q.includes('modelo') || q.includes('zapato') || q.includes('tenis') || q.includes('ver') || q.includes('comprar')) {
-        return `🔥 <b>Catálogo ZapaShop:</b><br><br>
-        Explora todos nuestros modelos disponibles y encuentra tus tenis ideales.<br><br>
-        👉 <a href="/catalogo" class="text-fuchsia-400 underline font-bold">Ver Catálogo Completo</a>`;
-    }
-
-    // B) TIENDAS FÍSICAS Y SUCURSALES
-    if (q.includes('sucursal') || q.includes('sucursales') || q.includes('tienda') || q.includes('tiendas') || q.includes('ubicacion') || q.includes('horario') || q.includes('direccion')) {
-        return `📍 <b>Nuestras Sucursales Físicas:</b><br><br>
+// 2. CONSULTA DIRECTA DE SUCURSALES Y TIENDAS FÍSICAS
+    if (q.includes('sucursal') || q.includes('sucursales') || q.includes('tienda') || q.includes('tiendas') || q.includes('ubicacion') || q.includes('direccion') || q.includes('horario') || q.includes('horarios')) {
+        return `📍 <b>Nuestras Sucursales Físicas ZapaShop:</b><br><br>
         • <b>Sucursal Centro:</b> Av. Juárez #89, Col. Centro (Metro Hidalgo)<br>
         • <b>Sucursal Iztapalapa:</b> Av. Ermita Iztapalapa #1234<br>
         • <b>Sucursal Coapa:</b> Calzada del Hueso #567<br><br>
         🕒 <b>Horario general:</b> Lunes a Domingo de 10:00 AM a 8:00 PM.<br>
-        <i>💡 Presenta tu ticket o ID de compra en cualquier tienda para cambios y devoluciones.</i>`;
+        <i>💡 Presenta tu ticket o ID de compra en cualquier tienda para cambios y devoluciones inmediatas.</i>`;
     }
 
-    // FALLBACK
+    // Buscar pedido por ID
+    if (estadoChat.flujoActual === 'esperando_numero_pedido' || esFormatoPedido) {
+        const pedidoEncontrado = historialPedidos.find(p => 
+            p.id.toUpperCase() === rawInput.toUpperCase() || 
+            p.id.replace('ORD-', '').toUpperCase() === rawInput.toUpperCase()
+        );
+
+        estadoChat.flujoActual = null;
+        guardarEstadoChat();
+
+        if (pedidoEncontrado) {
+            return `🔎 <b>Pedido (${pedidoEncontrado.id}):</b><br><br>
+            • <b>Cliente:</b> ${pedidoEncontrado.nombreCliente || 'Cliente'}<br>
+            • <b>Estatus:</b> <span class="text-blue-400 font-black">${pedidoEncontrado.estado}</span><br>
+            • <b>Total:</b> $${pedidoEncontrado.total || '0.00'}`;
+        } else {
+            return `❌ No se encontró la orden <b>"${rawInput}"</b>.`;
+        }
+    }
+
+    // Información general
+    if (q.includes('envio') || q.includes('costo')) return `🚚 <b>Envíos:</b> Gratis mayores a $999. Estándar: $99 MXN.`;
+    if (q.includes('talla')) return `👟 <b>Tallas:</b> Disponibles del 25 al 29 MXN en nuestro <a href="/catalogo" class="text-fuchsia-400 underline font-bold">Catálogo</a>.`;
+    if (q.includes('sucursal') || q.includes('tienda')) return `📍 <b>Sucursales:</b> Centro (Av. Juárez #89), Iztapalapa y Coapa. Horario: 10:00 AM - 8:00 PM.`;
+
+    // FALLBACK GENERALE
     return `🤖 <b>Asistente ZapaShop:</b><br><br>
     Puedo ayudarte con:<br>
-    • 📦 <i>"Rastrear pedido"</i> o tu código <code>ORD-937673</code><br>
-    • 🎧 <i>"Hablar con un agente"</i><br>
-    • 🔄 <i>"Reembolso"</i> o <i>"Tallas"</i>`;
+    • 🔄 <i>"Cambio o reembolso"</i><br>
+    • 📦 <i>"Rastrear pedido"</i><br>
+    • 🔐 <i>"Problemas para iniciar sesión"</i><br>
+    • 🎧 <i>"Hablar con un agente"</i>`;
 }
 
 // INICIALIZADOR DE INTERFAZ DEL CHATBOT
@@ -995,19 +1008,10 @@ function inicializarChatbot() {
     const rawUser = localStorage.getItem('usuario_logueado');
     const userObj = rawUser ? JSON.parse(rawUser) : null;
 
-    const usuarioUltimoChat = localStorage.getItem('zapa_chat_usuario_activo');
-    const usuarioActualId = userObj ? (userObj.email || userObj.nombre) : 'invitado';
-
-    if (usuarioUltimoChat !== usuarioActualId) {
-        localStorage.setItem('zapa_chat_usuario_activo', usuarioActualId);
-        estadoChat = { flujoActual: null, ultimoPedidoConsultado: null, datosTemp: {} };
-        guardarEstadoChat();
-    }
-
     if (!document.getElementById('chat-widget-container')) {
         const chatHTML = `
         <div id="chat-widget-container" style="position: fixed; bottom: 24px; right: 24px; z-index: 9999; font-family: inherit;">
-          <button id="chat-toggle-btn" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-fuchsia-600 hover:to-pink-600 text-white p-4 rounded-full shadow-2xl shadow-blue-600/50 hover:shadow-fuchsia-600/50 transition-all duration-300 flex items-center justify-center group focus:outline-none cursor-pointer scale-105 hover:scale-110 animate-bounce">
+          <button id="chat-toggle-btn" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-fuchsia-600 hover:to-pink-600 text-white p-4 rounded-full shadow-2xl shadow-blue-600/50 transition-all duration-300 flex items-center justify-center cursor-pointer scale-105 hover:scale-110">
             <i data-lucide="message-square-code" class="w-7 h-7"></i>
           </button>
 
@@ -1032,16 +1036,15 @@ function inicializarChatbot() {
 
             <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-950/60 text-xs flex flex-col"></div>
 
-            <!-- BOTONES CON HOVER DE CONTRASTE ROSA / FUCSIA -->
             <div class="px-3 py-2 bg-slate-900 border-t border-slate-800 flex gap-1.5 overflow-x-auto text-[10px] font-bold text-slate-300">
-                <button onclick="enviarOpcionChat('pedido')" class="bg-slate-800 border border-slate-700 hover:border-fuchsia-500 hover:text-fuchsia-300 hover:bg-slate-950 hover:shadow-lg hover:shadow-fuchsia-500/20 px-3 py-1.5 rounded-full whitespace-nowrap transition-all duration-300 cursor-pointer">📦 Mis Pedidos</button>
-                <button onclick="enviarOpcionChat('hablar con un agente')" class="bg-slate-800 border border-slate-700 hover:border-fuchsia-500 hover:text-fuchsia-300 hover:bg-slate-950 hover:shadow-lg hover:shadow-fuchsia-500/20 px-3 py-1.5 rounded-full whitespace-nowrap transition-all duration-300 cursor-pointer">🎧 Hablar con Agente</button>
-                <button onclick="enviarOpcionChat('quiero hacer un cambio')" class="bg-slate-800 border border-slate-700 hover:border-fuchsia-500 hover:text-fuchsia-300 hover:bg-slate-950 hover:shadow-lg hover:shadow-fuchsia-500/20 px-3 py-1.5 rounded-full whitespace-nowrap transition-all duration-300 cursor-pointer">🔄 Cambios / Devolución</button>
+                <button onclick="enviarOpcionChat('pedido')" class="bg-slate-800 border border-slate-700 hover:border-fuchsia-500 hover:text-fuchsia-300 hover:bg-slate-950 px-3 py-1.5 rounded-full whitespace-nowrap transition-all cursor-pointer">📦 Mis Pedidos</button>
+                <button onclick="enviarOpcionChat('no puedo iniciar sesion')" class="bg-slate-800 border border-slate-700 hover:border-fuchsia-500 hover:text-fuchsia-300 hover:bg-slate-950 px-3 py-1.5 rounded-full whitespace-nowrap transition-all cursor-pointer">🔐 Problemas de Login</button>
+                <button onclick="enviarOpcionChat('hablar con un agente')" class="bg-slate-800 border border-slate-700 hover:border-fuchsia-500 hover:text-fuchsia-300 hover:bg-slate-950 px-3 py-1.5 rounded-full whitespace-nowrap transition-all cursor-pointer">🎧 Hablar con Agente</button>
             </div>
 
             <div class="p-3 bg-slate-900 border-t border-slate-800 flex items-center gap-2">
               <input type="text" id="chat-input" placeholder="Escribe tu mensaje..." class="flex-1 bg-slate-950 border border-slate-800 px-4 py-2.5 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-fuchsia-500 font-medium placeholder:text-slate-500">
-              <button id="chat-send-btn" class="bg-blue-600 hover:bg-fuchsia-600 text-white p-2.5 rounded-xl transition-all duration-300 flex items-center justify-center cursor-pointer shadow-md hover:shadow-fuchsia-600/40">
+              <button id="chat-send-btn" class="bg-blue-600 hover:bg-fuchsia-600 text-white p-2.5 rounded-xl transition-all flex items-center justify-center cursor-pointer shadow-md">
                 <i data-lucide="send" class="w-4 h-4"></i>
               </button>
             </div>
@@ -1066,7 +1069,7 @@ function inicializarChatbot() {
     if (mensajesGuardados.length === 0) {
         const saludoInicial = userObj 
             ? `¡Hola <b>${userObj.nombre}</b>! 👟 Soy tu asistente virtual ZapaShop. ¿En qué puedo ayudarte hoy?`
-            : `¡Hola! 👟 Bienvenido a <b>ZapaShop</b>. Soy tu asistente virtual. Puedes preguntarme sobre tus pedidos, tallas o hablar con un asesor humano.`;
+            : `¡Hola! 👟 Bienvenido a <b>ZapaShop</b>. Soy tu asistente virtual. Puedes preguntarme sobre tus pedidos, inicio de sesión o hablar con un asesor humano.`;
 
         mensajesGuardados.push({
             remitente: 'ZapaShop Bot',
@@ -1085,14 +1088,6 @@ function inicializarChatbot() {
     });
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
-    const chatEstaAbierto = localStorage.getItem('zapa_chat_abierto') === 'true';
-    if (chatEstaAbierto) {
-        chatWindow.classList.remove('hidden');
-        chatWindow.classList.remove('scale-95', 'opacity-0');
-        chatWindow.classList.add('scale-100', 'opacity-100');
-        reiniciarTimerInactividad();
-    }
-
     function toggleChat() {
         const isHidden = chatWindow.classList.contains('hidden');
         if (isHidden) {
@@ -1109,7 +1104,6 @@ function inicializarChatbot() {
             chatWindow.classList.add('scale-95', 'opacity-0');
             setTimeout(() => chatWindow.classList.add('hidden'), 200);
             localStorage.setItem('zapa_chat_abierto', 'false');
-            if (timerInactividad) clearTimeout(timerInactividad);
         }
     }
 
@@ -1120,17 +1114,15 @@ function inicializarChatbot() {
         if (!texto) return;
 
         reiniciarTimerInactividad();
-
-        const inputElem = document.getElementById('chat-input');
-        if (inputElem) inputElem.value = '';
+        document.getElementById('chat-input').value = '';
 
         agregarMensajeUI('Tú', texto, 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white self-end rounded-2xl rounded-tr-none shadow-md');
 
         const typingId = 'typing-' + Date.now();
         const typingDiv = document.createElement('div');
         typingDiv.id = typingId;
-        typingDiv.className = 'p-3 max-w-[85%] text-xs bg-slate-800 text-slate-400 self-start border border-slate-700/50 rounded-2xl rounded-tl-none italic animate-pulse flex items-center gap-2';
-        typingDiv.innerHTML = '<b>ZapaShop Bot:</b> Escribiendo... <span class="w-2 h-2 bg-fuchsia-500 rounded-full animate-ping"></span>';
+        typingDiv.className = 'p-3 max-w-[85%] text-xs bg-slate-800 text-slate-400 self-start border border-slate-700 rounded-2xl rounded-tl-none italic animate-pulse';
+        typingDiv.innerHTML = '<b>ZapaShop Bot:</b> Escribiendo...';
         chatMessages.appendChild(typingDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
@@ -1138,10 +1130,9 @@ function inicializarChatbot() {
         try {
             const res = await fetch(API_URL);
             zapatosLista = await res.json();
-        } catch (e) { 
-            zapatosLista = []; 
-        }
+        } catch (e) { zapatosLista = []; }
 
+        // Retraso natural de 800ms para darle realismo y fluidez responsiva
         setTimeout(() => {
             const elemTyping = document.getElementById(typingId);
             if (elemTyping) elemTyping.remove();
@@ -1153,19 +1144,15 @@ function inicializarChatbot() {
     }
 
     sendBtn.onclick = () => {
-        const inputElem = document.getElementById('chat-input');
-        if (inputElem && inputElem.value.trim()) {
-            manejarInteraccion(inputElem.value.trim());
-        }
+        const val = chatInput.value.trim();
+        if (val) manejarInteraccion(val);
     };
 
     chatInput.onkeypress = (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
-            const inputElem = document.getElementById('chat-input');
-            if (inputElem && inputElem.value.trim()) {
-                manejarInteraccion(inputElem.value.trim());
-            }
+            const val = chatInput.value.trim();
+            if (val) manejarInteraccion(val);
         }
     };
 
@@ -1186,6 +1173,7 @@ function inicializarChatbot() {
         localStorage.setItem(claveStorage, JSON.stringify(historial));
     }
 }
+
 
 // --- INICIALIZACIÓN GLOBAL DE LA APLICACIÓN ---
 document.addEventListener("DOMContentLoaded", () => {

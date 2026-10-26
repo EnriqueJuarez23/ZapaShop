@@ -7,14 +7,16 @@ let halloweenGlobal = false;
 
 @Controller()
 export class AppController {
-  // 1. Definimos la ruta del archivo donde se guardará todo
+  // 1. Definimos la ruta del archivo donde se guardarán los zapatos
   private readonly filePath = path.join(__dirname, '..', 'zapatos.json');
+  
+  // 2. Definimos la ruta del archivo donde se guardarán los usuarios de forma persistente
+  private readonly userFilePath = path.join(__dirname, '..', 'usuarios.json');
 
-  // 2. Función interna para LEER los datos del archivo JSON
+  // --- GESTIÓN DE ZAPATOS ---
   private leerBaseDeDatos() {
     try {
       if (!fs.existsSync(this.filePath)) {
-        // Si el archivo no existe, creamos uno con tus zapatos iniciales
         const iniciales = [
           { id: 1, nombre: 'Nike Air Max 270', precio: 3200, categoria: 'Sneakers', img: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600', activo: true, stock: 15 },
           { id: 2, nombre: 'Adidas Ultraboost', precio: 3800, categoria: 'Sneakers', img: 'https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?w=600', activo: true, stock: 11 },
@@ -37,18 +39,66 @@ export class AppController {
     }
   }
 
-  // 3. Función interna para ESCRIBIR los datos en el archivo JSON
   private guardarBaseDeDatos(zapatos: any[]) {
     fs.writeFileSync(this.filePath, JSON.stringify(zapatos, null, 2));
   }
 
+  // --- GESTIÓN DE USUARIOS PERSISTENTES (NUEVO) ---
+  private leerUsuarios() {
+    try {
+      if (!fs.existsSync(this.userFilePath)) {
+        this.guardarUsuarios([]);
+        return [];
+      }
+      const data = fs.readFileSync(this.userFilePath, 'utf-8');
+      return JSON.parse(data);
+    } catch (error) {
+      console.error("Error leyendo usuarios:", error);
+      return [];
+    }
+  }
+
+  private guardarUsuarios(usuarios: any[]) {
+    fs.writeFileSync(this.userFilePath, JSON.stringify(usuarios, null, 2));
+  }
+
+  @Post('api/register')
+  registrarUsuario(@Body() nuevoUsuario: any) {
+    const usuarios = this.leerUsuarios();
+    const existe = usuarios.find(u => u.email === nuevoUsuario.email);
+    if (existe) {
+      return { success: false, message: 'El correo ya está registrado.' };
+    }
+    usuarios.push({
+      id: Date.now(),
+      ...nuevoUsuario
+    });
+    this.guardarUsuarios(usuarios);
+    return { success: true, message: 'Usuario registrado correctamente.' };
+  }
+
+  @Post('api/login')
+  loginUsuario(@Body() credenciales: any) {
+    const usuarios = this.leerUsuarios();
+    const usuarioEncontrado = usuarios.find(
+      u => u.email === credenciales.email && u.password === credenciales.password
+    );
+
+    if (!usuarioEncontrado) {
+      return { success: false, message: 'Credenciales incorrectas o usuario no registrado.' };
+    }
+
+    return { success: true, message: 'Bienvenido', usuario: usuarioEncontrado };
+  }
+
+  // --- RUTAS Y ENDPOINTS EXISTENTES ---
   @Get()
   @Render('index')
   getHome() { return {}; }
 
   @Get('api/zapatos')
   getZapatos(@Query('admin') admin: string) {
-    const zapatos = this.leerBaseDeDatos(); // Leemos del archivo
+    const zapatos = this.leerBaseDeDatos();
     if (admin === 'true') return zapatos;
     return zapatos.filter(z => z.activo);
   }
@@ -59,10 +109,10 @@ export class AppController {
     zapatos.push({
       id: Date.now(),
       ...nuevo,
-      stock: Number(nuevo.stock) || 0, // Agregamos el stock aquí
+      stock: Number(nuevo.stock) || 0,
       activo: true
     });
-    this.guardarBaseDeDatos(zapatos); // Guardamos en el archivo
+    this.guardarBaseDeDatos(zapatos);
     return { message: 'ok' };
   }
 
@@ -73,7 +123,6 @@ export class AppController {
 
     itemsVendidos.forEach(itemComprado => {
       const index = zapatos.findIndex(z => z.id === Number(itemComprado.id));
-      
       if (index !== -1) {
         const stockActual = Number(zapatos[index].stock) || 0;
         if (stockActual > 0) {
@@ -86,11 +135,12 @@ export class AppController {
     return { message: 'Stock actualizado correctamente' };
   }
 
-  @Get('admin')
+@Get('admin')
   @Render('admin')
   getAdmin(@Query('email') email: string) {
+    // Si no viene el correo o no termina en @zapashop.com, bloqueamos el acceso o redirigimos
     if (!email || !email.endsWith('@zapashop.com')) {
-      return { url: '/' };
+      return { autorizado: false, mensaje: 'Acceso no autorizado' };
     }
     return { autorizado: true };
   }
@@ -113,10 +163,6 @@ export class AppController {
     this.guardarBaseDeDatos(zapatos);
     return { message: 'Borrado' };
   }
-
-  // =====================================================================
-  // NUEVOS ENDPOINTS PARA LA CONFIGURACIÓN GLOBAL DE HALLOWEEN EN TIEMPO REAL
-  // =====================================================================
 
   @Get('api/config/halloween')
   getHalloweenStatus() {
