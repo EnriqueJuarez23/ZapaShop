@@ -10,5 +10,19 @@
     "nombre": "Administrador Enrique",
     "email": "enriquea@zapashop.com",
     "password": "AdminE"
+  },
+  {
+    "id": 1795419005865,
+    "nombre": "Armando",
+    "email": "enriquejuarez.ej7@gmail.com",
+    "password": "Enrique",
+    "rol": "cliente",
+    "verificado": true,
+    "codigoVerificacion": null,
+    "mfaHabilitado": true,
+    "codigoMFA": null,
+    "mfaExpiraEn": null,
+    "intentosFallidos": 0,
+    "bloqueadoHasta": null
   }
 ]

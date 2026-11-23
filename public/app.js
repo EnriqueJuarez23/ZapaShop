@@ -117,9 +117,18 @@ function agregarAlCarrito(id, nombre, precio, talla, stockDisponible, img) {
     localStorage.setItem('zapa_carrito', JSON.stringify(carrito));
     actualizarContadorCarrito();
 
-    if (typeof Swal !== 'undefined') {
-        Swal.fire({ title: '¡Añadido al carrito!', text: `${nombre} (Talla ${talla})`, icon: 'success', timer: 1500, showConfirmButton: false, toast: true, position: 'top-end' });
-    }
+if (typeof Swal !== 'undefined') {
+    Swal.fire({
+        title: '¡Añadido al carrito!',
+        text: `${nombre} (Talla ${talla})`,
+        icon: 'success',
+        timer: 1800,
+        showConfirmButton: false,
+        toast: true,
+        position: 'top-end'
+    });
+}
+
 
     if (document.getElementById('listaCarrito')) actualizarVistaCarrito();
 }
@@ -132,54 +141,55 @@ function actualizarVistaCarrito() {
     if (cantItemsElement) cantItemsElement.innerText = carrito.length;
 
     if (carrito.length === 0) {
-        lista.innerHTML = `
-            <div class="text-center py-20 bg-white rounded-[3rem] border border-slate-100 shadow-sm">
-                <div class="w-20 h-20 bg-slate-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i data-lucide="shopping-bag" class="w-10 h-10"></i>
-                </div>
-                <h3 class="text-2xl font-black text-slate-900 mb-2">Tu carrito está vacío</h3>
-                <p class="text-slate-500 font-medium mb-6 text-sm">Explora el catálogo y encuentra tus tenis ideales.</p>
-                <a href="/catalogo" class="inline-flex items-center gap-2 bg-slate-900 text-white font-black px-6 py-3 rounded-xl uppercase text-xs tracking-widest hover:bg-blue-600 transition">
-                    Ver Catálogo
-                </a>
-            </div>
-        `;
+	// Dentro de actualizarVistaCarrito() cuando carrito.length === 0:
+	lista.innerHTML = `
+	    <div class="text-center py-20 bg-slate-900/90 rounded-[3rem] border border-slate-800 shadow-xl">
+	        <div class="w-20 h-20 bg-slate-800 text-fuchsia-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-700">
+	            <i data-lucide="shopping-bag" class="w-10 h-10"></i>
+	        </div>
+	        <h3 class="text-2xl font-black text-white mb-2">Tu carrito está vacío</h3>
+	        <p class="text-slate-400 font-medium mb-6 text-sm">Explora el catálogo y encuentra tus tenis ideales.</p>
+	        <a href="/catalogo" class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-fuchsia-600 text-white font-black px-6 py-3 rounded-xl uppercase text-xs tracking-widest hover:opacity-90 transition shadow-lg">
+	            Ver Catálogo
+	        </a>
+	    </div>
+	`;
         if (window.lucide) lucide.createIcons();
         calcularTotales();
         return;
     }
 
-    let htmlProductos = carrito.map((item, index) => `
-        <div class="bg-white rounded-[2rem] p-5 mb-4 border border-slate-100 shadow-sm flex flex-col md:flex-row gap-5 items-center">
-            <img src="${item.img}" class="w-24 h-24 object-cover rounded-2xl bg-slate-50 flex-shrink-0">
-            <div class="flex-grow w-full">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <h4 class="font-black text-slate-800 text-base">${item.nombre}</h4>
-                        <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-md mt-1 inline-block">Talla: ${item.talla}</span>
-                    </div>
-                    <button onclick="eliminarDelCarrito(${index})" class="text-slate-300 hover:text-rose-500 p-1 cursor-pointer">
-                        <i data-lucide="trash-2" class="w-5 h-5"></i>
-                    </button>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 pt-3 border-t border-slate-50">
-                    <select onchange="cambiarMetodoEntrega(${index}, this.value)" class="bg-slate-50 border-none rounded-xl py-2 px-3 text-xs font-bold text-slate-700 outline-none">
-                        <option value="envio" ${item.metodo === 'envio' ? 'selected' : ''}>🚚 Envío a Domicilio</option>
-                        <option value="fisica" ${item.metodo === 'fisica' ? 'selected' : ''}>🏢 Recoger en Tienda</option>
-                    </select>
-                    <div class="${item.metodo === 'fisica' ? 'block' : 'hidden'}">
-                        <select onchange="cambiarTienda(${index}, this.value)" class="bg-slate-50 border-none rounded-xl py-2 px-3 text-xs font-bold text-slate-700 outline-none w-full">
-                            <option value="">Selecciona sucursal</option>
-                            ${TIENDAS_FISICAS.map(t => `<option value="${t.id}" ${item.tiendaId == t.id ? 'selected' : ''}>${t.nombre}</option>`).join('')}
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="text-right flex-shrink-0 w-full md:w-auto border-t md:border-t-0 pt-3 md:pt-0">
-                <span class="text-xl font-black text-slate-900">$${Number(item.precio).toLocaleString()}</span>
-            </div>
-        </div>
-    `).join('');
+	let htmlProductos = carrito.map((item, index) => `
+	    <div class="bg-slate-900/95 rounded-[2rem] p-5 mb-4 border border-slate-800 shadow-lg flex flex-col md:flex-row gap-5 items-center transition-all hover:border-fuchsia-500/50">
+	        <img src="${item.img}" class="w-24 h-24 object-cover rounded-2xl bg-slate-800 flex-shrink-0 border border-slate-700">
+	        <div class="flex-grow w-full">
+	            <div class="flex justify-between items-start">
+	                <div>
+	                    <h4 class="font-black text-white text-base">${item.nombre}</h4>
+	                    <span class="text-xs font-bold text-fuchsia-300 bg-fuchsia-950/70 border border-fuchsia-800/50 px-2.5 py-0.5 rounded-md mt-1 inline-block">Talla: ${item.talla}</span>
+	                </div>
+	                <button onclick="eliminarDelCarrito(${index})" class="text-slate-400 hover:text-rose-400 p-1 cursor-pointer transition-colors">
+	                    <i data-lucide="trash-2" class="w-5 h-5"></i>
+	                </button>
+	            </div>
+	            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 pt-3 border-t border-slate-800">
+	                <select onchange="cambiarMetodoEntrega(${index}, this.value)" class="bg-slate-950 border border-slate-800 rounded-xl py-2 px-3 text-xs font-bold text-slate-200 outline-none focus:border-fuchsia-500">
+	                    <option value="envio" ${item.metodo === 'envio' ? 'selected' : ''}>🚚 Envío a Domicilio</option>
+	                    <option value="fisica" ${item.metodo === 'fisica' ? 'selected' : ''}>🏢 Recoger en Tienda</option>
+	                </select>
+	                <div class="${item.metodo === 'fisica' ? 'block' : 'hidden'}">
+	                    <select onchange="cambiarTienda(${index}, this.value)" class="bg-slate-950 border border-slate-800 rounded-xl py-2 px-3 text-xs font-bold text-slate-200 outline-none focus:border-fuchsia-500 w-full">
+	                        <option value="">Selecciona sucursal</option>
+	                        ${TIENDAS_FISICAS.map(t => `<option value="${t.id}" ${item.tiendaId == t.id ? 'selected' : ''}>${t.nombre}</option>`).join('')}
+	                    </select>
+	                </div>
+	            </div>
+	        </div>
+	        <div class="text-right flex-shrink-0 w-full md:w-auto border-t md:border-t-0 border-slate-800 pt-3 md:pt-0">
+	            <span class="text-xl font-black text-blue-400">$${Number(item.precio).toLocaleString()}</span>
+	        </div>
+	    </div>
+	`).join('');
 
     const necesitaEnvio = carrito.some(item => item.metodo === 'envio');
 
@@ -261,33 +271,33 @@ function cargarHistorialPedidos() {
         return;
     }
 
-    contenedor.innerHTML = misPedidos.map(pedido => `
-        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 hover:border-blue-300 transition-all">
-            <div class="flex flex-wrap justify-between items-center pb-3 mb-3 border-b border-slate-200 gap-2">
-                <div>
-                    <span class="text-xs font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-full">${pedido.id}</span>
-                    <span class="text-xs font-bold text-slate-400 ml-2">${pedido.fecha}</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="bg-emerald-100 text-emerald-700 text-[10px] font-black px-2.5 py-1 rounded-md uppercase">${pedido.estado}</span>
-                    <span class="text-base font-black text-slate-900">${pedido.total}</span>
-                </div>
-            </div>
+	contenedor.innerHTML = misPedidos.map(pedido => `
+	    <div class="bg-slate-900/95 border border-slate-800 rounded-2xl p-5 hover:border-fuchsia-500/50 transition-all shadow-md">
+	        <div class="flex flex-wrap justify-between items-center pb-3 mb-3 border-b border-slate-800 gap-2">
+	            <div>
+	                <span class="text-xs font-black text-fuchsia-300 bg-fuchsia-950/70 border border-fuchsia-800/50 px-3 py-1 rounded-full">${pedido.id}</span>
+	                <span class="text-xs font-bold text-slate-400 ml-2">${pedido.fecha}</span>
+	            </div>
+	            <div class="flex items-center gap-2">
+	                <span class="bg-emerald-950/80 text-emerald-300 border border-emerald-800/50 text-[10px] font-black px-2.5 py-1 rounded-md uppercase">${pedido.estado}</span>
+	                <span class="text-base font-black text-white">${pedido.total}</span>
+	            </div>
+	        </div>
 
-            <div class="space-y-2 mb-3">
-                ${pedido.items.map(item => `
-                    <div class="flex items-center justify-between text-xs font-medium text-slate-700">
-                        <span>👟 <b>${item.nombre}</b> (Talla: ${item.talla})</span> <span class="font-bold text-slate-900">$${Number(item.precio).toLocaleString()}</span>
-                    </div>
-                `).join('')}
-            </div>
+	        <div class="space-y-2 mb-3">
+	            ${pedido.items.map(item => `
+	                <div class="flex items-center justify-between text-xs font-medium text-slate-200">
+	                    <span>👟 <b>${item.nombre}</b> (Talla: ${item.talla})</span> <span class="font-bold text-blue-400">$${Number(item.precio).toLocaleString()}</span>
+	                </div>
+	            `).join('')}
+	        </div>
 
-            <div class="pt-2 border-t border-slate-200/60 flex justify-between items-center text-[11px] text-slate-500">
-                <span><b>Entrega:</b> ${pedido.direccion}</span>
-                <span><b>Pago:</b> ${pedido.metodoPago}</span>
-            </div>
-        </div>
-    `).join('');
+	        <div class="pt-2 border-t border-slate-800 flex flex-wrap justify-between items-center text-[11px] text-slate-400 gap-2">
+	            <span><b class="text-slate-200">Entrega:</b> ${pedido.direccion}</span>
+	            <span><b class="text-slate-200">Pago:</b> ${pedido.metodoPago}</span>
+	        </div>
+	    </div>
+	`).join('');
 
     if (window.lucide) lucide.createIcons();
 }
@@ -578,7 +588,171 @@ function prepararEdicion(id, nombre, precio, categoria, img, stock) {
     if (window.lucide) lucide.createIcons();
 }
 
-// Registro y Login
+// Registro y Login (con Verificación, MFA, Lockout y Session Timeout)
+
+const SESSION_TIMEOUT_MS = 2 * 60 * 1000; // 2 minutos de inactividad
+let sessionTimeoutTimer = null;
+
+function guardarSesionActiva(usuario) {
+    const payload = {
+        usuario,
+        ultimaActividad: Date.now()
+    };
+    localStorage.setItem('usuario_logueado', JSON.stringify(usuario));
+    localStorage.setItem('zapa_sesion_meta', JSON.stringify(payload));
+    iniciarControlSessionTimeout();
+}
+
+function expirarSesionPorInactividad() {
+    const rawUser = localStorage.getItem('usuario_logueado');
+    if (!rawUser) return;
+
+    localStorage.removeItem('usuario_logueado');
+    localStorage.removeItem('zapa_sesion_meta');
+    localStorage.removeItem('zapa_chat_historial_mensajes');
+    localStorage.removeItem('zapa_chat_estado');
+
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: 'Sesión expirada',
+            text: 'Tu sesión se cerró automáticamente por inactividad.',
+            icon: 'warning',
+            confirmButtonColor: '#0f172a'
+        }).then(() => {
+            window.location.href = '/';
+        });
+    } else {
+        alert('Tu sesión se cerró por inactividad.');
+        window.location.href = '/';
+    }
+}
+
+function registrarActividadUsuario() {
+    const rawUser = localStorage.getItem('usuario_logueado');
+    if (!rawUser) return;
+
+    const payload = {
+        usuario: JSON.parse(rawUser),
+        ultimaActividad: Date.now()
+    };
+    localStorage.setItem('zapa_sesion_meta', JSON.stringify(payload));
+}
+
+function iniciarControlSessionTimeout() {
+    if (sessionTimeoutTimer) clearInterval(sessionTimeoutTimer);
+
+    const rawUser = localStorage.getItem('usuario_logueado');
+    if (!rawUser) return;
+
+    const rawMeta = localStorage.getItem('zapa_sesion_meta');
+    if (!rawMeta) {
+        registrarActividadUsuario();
+    }
+
+    ['click', 'keydown', 'mousemove', 'scroll', 'touchstart'].forEach(evento => {
+        document.addEventListener(evento, registrarActividadUsuario, { passive: true });
+    });
+
+    sessionTimeoutTimer = setInterval(() => {
+        const metaActual = JSON.parse(localStorage.getItem('zapa_sesion_meta') || 'null');
+        if (!metaActual || !metaActual.ultimaActividad) return;
+
+        if (Date.now() - metaActual.ultimaActividad >= SESSION_TIMEOUT_MS) {
+            clearInterval(sessionTimeoutTimer);
+            expirarSesionPorInactividad();
+        }
+    }, 5000);
+}
+
+async function solicitarCodigoVerificacion(email, codigoDemo, mensaje) {
+    let codigo = '';
+    if (typeof Swal !== 'undefined') {
+        const result = await Swal.fire({
+            title: 'Verificación de cuenta',
+            html: `<p class="text-sm text-slate-600 mb-2">${mensaje}</p>
+                   <p class="text-xs text-blue-600 font-bold">Código demo: <code>${codigoDemo}</code></p>`,
+            input: 'text',
+            inputLabel: 'Ingresa el código de 6 dígitos',
+            inputPlaceholder: '123456',
+            showCancelButton: true,
+            confirmButtonText: 'Verificar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#0f172a'
+        });
+        if (!result.isConfirmed || !result.value) return;
+        codigo = result.value.trim();
+    } else {
+        codigo = (prompt(`${mensaje}\nCódigo demo: ${codigoDemo}`) || '').trim();
+        if (!codigo) return;
+    }
+
+    const res = await fetch('/api/verify-account', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, codigo })
+    });
+    const data = await res.json();
+
+    if (typeof Swal !== 'undefined') {
+        await Swal.fire({
+            title: data.success ? '¡Cuenta verificada!' : 'Error de verificación',
+            text: data.message,
+            icon: data.success ? 'success' : 'error',
+            confirmButtonColor: '#0f172a'
+        });
+    } else {
+        alert(data.message);
+    }
+
+    if (data.success) {
+        window.location.reload();
+    }
+}
+
+async function solicitarCodigoMFA(email, codigoMFADemo, mensaje) {
+    let codigo = '';
+    if (typeof Swal !== 'undefined') {
+        const result = await Swal.fire({
+            title: 'Autenticación Multifactor (MFA)',
+            html: `<p class="text-sm text-slate-600 mb-2">${mensaje}</p>
+                   <p class="text-xs text-fuchsia-600 font-bold">Código MFA demo: <code>${codigoMFADemo}</code></p>`,
+            input: 'text',
+            inputLabel: 'Ingresa el código MFA de 6 dígitos',
+            inputPlaceholder: '000000',
+            showCancelButton: true,
+            confirmButtonText: 'Confirmar acceso',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#0f172a'
+        });
+        if (!result.isConfirmed || !result.value) return;
+        codigo = result.value.trim();
+    } else {
+        codigo = (prompt(`${mensaje}\nCódigo MFA demo: ${codigoMFADemo}`) || '').trim();
+        if (!codigo) return;
+    }
+
+    const res = await fetch('/api/verify-mfa', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, codigo })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+        guardarSesionActiva(data.usuario);
+        if (data.usuario.email.endsWith('@zapashop.com')) {
+            window.location.href = `/admin?email=${encodeURIComponent(data.usuario.email)}`;
+        } else {
+            window.location.href = '/perfil';
+        }
+    } else {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({ title: 'MFA inválido', text: data.message, icon: 'error', confirmButtonColor: '#0f172a' });
+        } else {
+            alert(data.message);
+        }
+    }
+}
 
 const formRegistro = document.getElementById('formRegistro');
 if (formRegistro) {
@@ -596,7 +770,9 @@ if (formRegistro) {
             });
             const data = await res.json();
 
-            if (data.success) {
+            if (data.success && data.requiereVerificacion) {
+                await solicitarCodigoVerificacion(email, data.codigoDemo, data.message);
+            } else if (data.success) {
                 if (typeof Swal !== 'undefined') {
                     Swal.fire({ title: '¡Cuenta creada!', text: 'Ya puedes iniciar sesión.', icon: 'success', confirmButtonColor: '#0f172a' }).then(() => window.location.reload());
                 } else {
@@ -604,7 +780,11 @@ if (formRegistro) {
                     window.location.reload();
                 }
             } else {
-                alert(data.message);
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({ title: 'Registro', text: data.message, icon: 'warning', confirmButtonColor: '#0f172a' });
+                } else {
+                    alert(data.message);
+                }
             }
         } catch (err) {
             console.error("Error en registro:", err);
@@ -628,18 +808,24 @@ if (formLogin) {
             const data = await res.json();
 
             if (data.success) {
-                // Guardamos la sesión del usuario que SÍ existe en el servidor
-                localStorage.setItem('usuario_logueado', JSON.stringify(data.usuario));
-                
-                // Si es administrador real, lo mandamos al panel
+                guardarSesionActiva(data.usuario);
                 if (data.usuario.email.endsWith('@zapashop.com')) {
-                    window.location.href = '/admin';
+                    window.location.href = `/admin?email=${encodeURIComponent(data.usuario.email)}`;
                 } else {
                     window.location.href = '/perfil';
                 }
+            } else if (data.requiereVerificacion) {
+                await solicitarCodigoVerificacion(data.email || email, data.codigoDemo, data.message);
+            } else if (data.requiereMFA) {
+                await solicitarCodigoMFA(data.email || email, data.codigoMFADemo, data.message);
             } else {
                 if (typeof Swal !== 'undefined') {
-                    Swal.fire({ title: 'Datos incorrectos', text: data.message, icon: 'error', confirmButtonColor: '#0f172a' });
+                    Swal.fire({
+                        title: data.bloqueado ? 'Cuenta bloqueada' : 'Datos incorrectos',
+                        text: data.message,
+                        icon: data.bloqueado ? 'warning' : 'error',
+                        confirmButtonColor: '#0f172a'
+                    });
                 } else {
                     alert(data.message);
                 }
@@ -672,12 +858,24 @@ if (btnTabLogin && btnTabRegistro) {
 function verificarEstadoSesion() {
     const raw = localStorage.getItem('usuario_logueado');
     if (!raw) return;
+
+    const rawMeta = localStorage.getItem('zapa_sesion_meta');
+    if (rawMeta) {
+        const meta = JSON.parse(rawMeta);
+        if (meta.ultimaActividad && (Date.now() - meta.ultimaActividad >= SESSION_TIMEOUT_MS)) {
+            expirarSesionPorInactividad();
+            return;
+        }
+    }
+
+    iniciarControlSessionTimeout();
+
     const user = JSON.parse(raw);
     const linkPerfil = document.querySelector('a[href="/perfil"]');
     if (linkPerfil) linkPerfil.innerHTML = `<i data-lucide="user" class="w-4 h-4"></i> ${user.nombre}`;
-    
+
     document.querySelectorAll('a[href="/registro"], .btn-registro').forEach(b => b.style.display = 'none');
-    
+
     const seccionLogueado = document.getElementById('seccionUsuarioLogueado');
     const seccionAuth = document.getElementById('seccionAuth');
 
@@ -699,7 +897,9 @@ function gestionarPermisosUI() {
 }
 
 function cerrarSesion() {
+    if (sessionTimeoutTimer) clearInterval(sessionTimeoutTimer);
     localStorage.removeItem('usuario_logueado');
+    localStorage.removeItem('zapa_sesion_meta');
     localStorage.removeItem('zapa_chat_historial_mensajes');
     localStorage.removeItem('zapa_chat_estado');
     window.location.href = '/';

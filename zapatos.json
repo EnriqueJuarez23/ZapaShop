@@ -5,7 +5,7 @@
     "precio": 3200,
     "categoria": "Sneakers",
     "img": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600",
-    "stock": 10,
+    "stock": 9,
     "activo": true
   },
   {
@@ -14,7 +14,7 @@
     "precio": 3800,
     "categoria": "Sneakers",
     "img": "https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?w=600",
-    "stock": 4,
+    "stock": 3,
     "activo": true
   },
   {
@@ -32,7 +32,7 @@
     "precio": 3500,
     "categoria": "Botas",
     "img": "https://assets.timberland.com/images/t_img/f_auto,h_650,e_sharpen:60,w_650/dpr_2.0/v1719369337/TB118094231-HERO/Mens-Timberland-Classic-6Inch-Waterproof-Boot-TBL-HERO.png",
-    "stock": 38,
+    "stock": 37,
     "activo": true
   },
   {
